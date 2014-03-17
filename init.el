@@ -6,6 +6,8 @@
 (cask-initialize)
 (require 'pallet)
 
+(require 'use-package)
+
 (require 'powerline)
 (powerline-default-theme)
 
