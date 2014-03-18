@@ -3,7 +3,7 @@
 set -e
 
 installed=$(which cask)
-if $installed; then
+if -z $installed; then
     echo "Already installed."
     exit 0
 fi
