@@ -3,7 +3,7 @@
 set -e
 
 installed=$(which cask)
-if ${installed}; then
+if $installed; then
     echo "Already installed."
     exit 0
 fi
@@ -24,6 +24,6 @@ fi
 
 emacsdir=$(get_absolute_path)
 
-cd ${emacsdir}
+cd $emacsdir
 git pull --rebase
 cask install
