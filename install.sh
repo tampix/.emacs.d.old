@@ -1,12 +1,6 @@
-#/bin/zsh
+#!/usr/bin/env zsh
 
 set -e
-
-installed=$(which cask)
-if -z $installed; then
-    echo "Already installed."
-    exit 0
-fi
 
 get_absolute_path() {
 	pushd `dirname $0` > /dev/null
@@ -14,16 +8,18 @@ get_absolute_path() {
 	popd > /dev/null
 }
 
-curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+if [ ! -d ~/.cask/ ]; then
+	curl -fsSkL https://raw.github.com/cask/cask/master/go | python
 
-if grep --quiet cask ~/.zshenv; then
-    echo "typeset -U path" > ~/.zshenv
-    echo "path+=(~/.cask/bin)" >> ~/.zshenv
-    source ~/.zshenv
+	if grep --quiet cask ~/.zshenv; then
+		echo "path+=(~/.cask/bin)" >> ~/.zshenv
+	fi
+	typeset -gxU path
+	path+=(~/.cask/bin)
 fi
 
 emacsdir=$(get_absolute_path)
 
 cd $emacsdir
-git pull --rebase
+git pull
 cask install
