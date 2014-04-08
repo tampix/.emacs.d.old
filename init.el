@@ -90,9 +90,7 @@
     (define-key evil-ex-map "e " 'ido-find-file)
     (define-key evil-ex-map "b " 'ido-switch-buffer)
     ;; Vim-ism ;]
-    (define-key evil-normal-state-map "Y" kbd("y$"))
-    (define-key evil-visual-state-map "<" kbd("<gv"))
-    (define-key evil-visual-state-map ">" kbd(">gv"))
+    (define-key evil-normal-state-map "Y" (kbd "y$"))
     ;; ESC exit from anywhere
     (define-key evil-normal-state-map [escape] 'keyboard-quit)
     (define-key evil-visual-state-map [escape] 'keyboard-quit)
