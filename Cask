@@ -1,6 +1,11 @@
 (source melpa)
 
-(depends-on "grandshell-theme")
+(depends-on "ag")
+(depends-on "eldoc")
+(depends-on "evil")
+(depends-on "flx-ido")
+(depends-on "ido-vertical-mode")
+(depends-on "ir-black-theme")
 (depends-on "pallet")
 (depends-on "powerline")
 (depends-on "projectile")
