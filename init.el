@@ -18,10 +18,17 @@
 
 (require 'use-package)
 
-(require 'powerline)
-(powerline-default-theme)
+(use-package ir-black-theme
+  :config (load-theme 'ir-black :no-confirm))
 
-(load-theme 'ir-black :no-confirm)
+(use-package powerline
+  :init (powerline-default-theme)
+  :config
+  (progn
+    (set-face-attribute 'mode-line nil
+			:box nil)
+    (set-face-attribute 'mode-line-inactive nil
+			:box nil)))
 
 (use-package cc-mode
   :config
