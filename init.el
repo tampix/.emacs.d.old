@@ -3,10 +3,10 @@
   (server-start))
 
 (mapc
-  (lambda (mode)
-    (when (fboundp mode)
-      (funcall mode -1)))
-  '(menu-bar-mode tool-bar-mode scroll-bar-mode))
+ (lambda (mode)
+   (when (fboundp mode)
+     (funcall mode -1)))
+ '(menu-bar-mode tool-bar-mode scroll-bar-mode))
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
@@ -33,12 +33,15 @@
 (use-package cc-mode
   :config
   (progn
-    (add-hook 'c-mode-hook (lambda ()
-      (c-set-style "bsd"))))
-    (add-hook 'java-mode-hook (lambda ()
-      (setq c-basic-offset 4
-        tab-width 4
-        indent-tabs-mode t))))
+    (add-hook 'c-mode-hook
+	      (lambda ()
+		(c-set-style "bsd")))
+    (add-hook 'c++-mode-hook 'google-set-c-style)
+    (add-hook 'java-mode-hook
+	      (lambda ()
+		(setq c-basic-offset 4
+		      tab-width 4
+		      indent-tabs-mode t)))))
 
 (use-package projectile
   :init (projectile-global-mode t)

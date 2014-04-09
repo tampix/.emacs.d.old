@@ -4,6 +4,7 @@
 (depends-on "eldoc")
 (depends-on "evil")
 (depends-on "flx-ido")
+(depends-on "google-c-style")
 (depends-on "ido-vertical-mode")
 (depends-on "ir-black-theme")
 (depends-on "pallet")
