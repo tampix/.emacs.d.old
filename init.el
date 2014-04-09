@@ -75,7 +75,10 @@
       :init (ido-vertical-mode t))
     (use-package flx-ido
       :init (flx-ido-mode t)
-      :config (setq ido-use-face nil))))
+      :config (setq ido-use-face nil))
+    (use-package smex
+      :init (smex-initialize)
+      :bind ("M-x" . smex))))
 
 (use-package emacs-lisp-mode
   :init
