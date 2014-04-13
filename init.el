@@ -10,7 +10,14 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
 (setq inhibit-startup-screen t)
+
+(setq redisplay-dont-pause t
+      scroll-step 1
+      scroll-conservatively 10000)
 
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
@@ -29,6 +36,9 @@
 			:box nil)
     (set-face-attribute 'mode-line-inactive nil
 			:box nil)))
+
+(use-package paren
+  :init (show-paren-mode t))
 
 (use-package cc-mode
   :config
@@ -83,11 +93,48 @@
 (use-package emacs-lisp-mode
   :init
   (progn
+    (use-package paredit
+      :init (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode))
     (use-package eldoc
-      :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)))
+      :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+      :config
+      (progn
+	(eldoc-add-command
+	 'paredit-backward-delete
+	 'paredit-close-round)))
+    (use-package rainbow-delimiters
+      :init
+      (progn 
+	(defun turn-on-rainbow-delimiters-mode ()
+	  (rainbow-delimiters-mode t))
+	(add-hook 'emacs-lisp-mode-hook 'turn-on-rainbow-delimiters-mode)))
+    (use-package highlight-parentheses
+      :init
+      (progn 
+	(defun turn-on-highlight-parentheses-mode ()
+	  (highlight-parentheses-mode t))
+	(add-hook 'emacs-lisp-mode-hook 'turn-on-highlight-parentheses-mode))))
   :mode ("Cask" . emacs-lisp-mode))
 
 (use-package ag)
+
+(use-package company
+  :init (global-company-mode t)
+  :config
+  (progn 
+    (setq company-transformers '(company-sort-by-occurrence))
+    (setq company-require-match t)
+    ;; key mapping
+    (define-key company-active-map (kbd "\C-n") 'company-select-next)
+    (define-key company-active-map (kbd "\C-p") 'company-select-previous)
+    (define-key company-active-map (kbd "\C-d") 'company-show-doc-buffer)
+    (define-key company-active-map (kbd "<tab>") 'company-complete)))
+
+(use-package git-gutter-fringe+
+  :init (global-git-gutter+-mode t)
+  :config
+  (progn
+    (git-gutter-fr+-minimal)))
 
 (use-package evil
   :defer t ;; needed for C-u, C-i, etc ...
