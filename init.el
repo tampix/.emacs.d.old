@@ -98,6 +98,8 @@
     (use-package flx-ido
       :init (flx-ido-mode t)
       :config (setq ido-use-face nil))
+    (use-package ido-ubiquitous
+      :init (ido-ubiquitous-mode t))
     (use-package smex
       :init (smex-initialize)
       :bind ("M-x" . smex))))

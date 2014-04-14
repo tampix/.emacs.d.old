@@ -8,6 +8,7 @@
 (depends-on "git-gutter-fringe+")
 (depends-on "google-c-style")
 (depends-on "highlight-parentheses")
+(depends-on "ido-ubiquitous")
 (depends-on "ido-vertical-mode")
 (depends-on "ir-black-theme")
 (depends-on "magit")
