@@ -15,6 +15,8 @@
 
 (setq inhibit-startup-screen t)
 
+(toggle-truncate-lines t)
+
 (setq redisplay-dont-pause t
       scroll-step 1
       scroll-conservatively 10000)
@@ -58,7 +60,17 @@
   :config
   (progn
     (setq projectile-enable-caching t)
-    (setq projectile-completion-system 'ido)))
+    (setq projectile-completion-system 'ido)
+    (setq projectile-switch-project-action 'projectile-vc)))
+
+(use-package magit
+  :init
+  (progn
+    (use-package magit-blame))
+  :config
+  (progn
+    (setq magit-status-buffer-switch-function 'switch-to-buffer))
+  :commands magit-status)
 
 (use-package ido
   :init (ido-mode t)
@@ -116,7 +128,11 @@
 	(add-hook 'emacs-lisp-mode-hook 'turn-on-highlight-parentheses-mode))))
   :mode ("Cask" . emacs-lisp-mode))
 
-(use-package ag)
+(use-package ag
+  :config
+  (progn
+    (setq ag-reuse-buffers t)
+    (setq ag-reuse-window t)))
 
 (use-package company
   :init (global-company-mode t)
@@ -147,8 +163,13 @@
     (evil-mode t))
   :config
   (progn
+    (evil-add-hjkl-bindings magit-status-mode-map 'emacs
+      ":" 'evil-ex)
     (define-key evil-ex-map "e " 'ido-find-file)
     (define-key evil-ex-map "b " 'ido-switch-buffer)
+    (define-key evil-ex-map "pf " 'projectile-find-file)
+    (define-key evil-ex-map "ps " 'projectile-switch-project)
+    (define-key evil-ex-map "pa " 'projectile-ag)
     ;; Vim-ism ;]
     (define-key evil-normal-state-map "Y" (kbd "y$"))
     ;; ESC exit from anywhere

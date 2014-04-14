@@ -10,6 +10,7 @@
 (depends-on "highlight-parentheses")
 (depends-on "ido-vertical-mode")
 (depends-on "ir-black-theme")
+(depends-on "magit")
 (depends-on "pallet")
 (depends-on "paredit")
 (depends-on "powerline")
