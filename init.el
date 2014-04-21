@@ -130,6 +130,9 @@
 	(add-hook 'emacs-lisp-mode-hook 'turn-on-highlight-parentheses-mode))))
   :mode ("Cask" . emacs-lisp-mode))
 
+(use-package markdown-mode
+  :mode ("README\\.md\\'" . gfm-mode))
+
 (use-package ag
   :config
   (progn
