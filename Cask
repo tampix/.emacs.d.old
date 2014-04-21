@@ -1,6 +1,7 @@
 (source melpa)
 
 (depends-on "ag")
+(depends-on "coffee-mode")
 (depends-on "company")
 (depends-on "eldoc")
 (depends-on "evil")

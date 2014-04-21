@@ -39,6 +39,13 @@
     (set-face-attribute 'mode-line-inactive nil
 			:box nil)))
 
+(use-package org
+  :config
+  (progn
+    (define-key global-map "\C-ca" 'org-agenda)
+    (setq org-log-done 'time
+	  org-startup-folded nil)))
+
 (use-package paren
   :init (show-paren-mode t))
 
