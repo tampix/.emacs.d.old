@@ -172,7 +172,8 @@
     (setq evil-want-C-u-scroll t)
     (setq evil-want-C-i-jump t)
     (setq evil-want-C-w-in-emacs-state t)
-    (evil-mode t))
+    (evil-mode t)
+    (use-package evil-visualstar))
   :config
   (progn
     (evil-add-hjkl-bindings magit-status-mode-map 'emacs

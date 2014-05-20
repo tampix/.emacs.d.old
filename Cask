@@ -5,6 +5,7 @@
 (depends-on "company")
 (depends-on "eldoc")
 (depends-on "evil")
+(depends-on "evil-visualstar")
 (depends-on "flx-ido")
 (depends-on "git-gutter-fringe+")
 (depends-on "google-c-style")
