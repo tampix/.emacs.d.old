@@ -1,3 +1,4 @@
+(source gnu)
 (source melpa)
 
 (depends-on "ag")
@@ -20,5 +21,6 @@
 (depends-on "powerline")
 (depends-on "projectile")
 (depends-on "rainbow-delimiters")
+(depends-on "rainbow-mode")
 (depends-on "smex")
 (depends-on "use-package")
