@@ -62,6 +62,9 @@
 		      tab-width 4
 		      indent-tabs-mode t)))))
 
+(use-package sgml-mode
+  :mode ("\\.tml\\'" . html-mode))
+
 (use-package projectile
   :init (projectile-global-mode t)
   :config
