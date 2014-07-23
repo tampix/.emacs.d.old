@@ -21,6 +21,10 @@
       scroll-step 1
       scroll-conservatively 10000)
 
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(setq confirm-nonexistent-file-or-buffer nil)
+
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
 (require 'pallet)
@@ -87,7 +91,7 @@
   :config
   (progn
     (setq ido-everywhere t)
-    (setq ido-create-new-buffer t)
+    (setq ido-create-new-buffer 'always)
     (use-package ido-other-window
       :config
       (progn 
