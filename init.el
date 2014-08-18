@@ -165,6 +165,13 @@
     (define-key company-active-map (kbd "\C-d") 'company-show-doc-buffer)
     (define-key company-active-map (kbd "<tab>") 'company-complete)))
 
+(use-package rainbow-mode
+  :init
+  (progn
+    (add-hook 'css-mode-hook 'rainbow-turn-on)
+    (add-hook 'html-mode-hook 'rainbow-turn-on)
+    (add-hook 'emacs-lisp-mode-hook 'rainbow-turn-on)))
+
 (use-package git-gutter-fringe+
   :init (global-git-gutter+-mode t)
   :config
@@ -172,19 +179,26 @@
     (git-gutter-fr+-minimal)))
 
 (use-package evil
-  :defer t ;; needed for C-u, C-i, etc ...
-  :init
+  :pre-load
   (progn
-    (setq evil-default-cursor t)
     (setq evil-want-C-u-scroll t)
     (setq evil-want-C-i-jump t)
-    (setq evil-want-C-w-in-emacs-state t)
-    (evil-mode t)
+    (setq evil-want-C-w-in-emacs-state t))
+  :init
+  (progn
+    (use-package evil-leader
+      ; TODO
+      )
     (use-package evil-visualstar))
   :config
   (progn
+    (setq evil-default-cursor t)
+    (evil-mode t)
+
     (evil-add-hjkl-bindings magit-status-mode-map 'emacs
       ":" 'evil-ex)
+    (define-key evil-insert-state-map (kbd "RET") 'evil-ret-and-indent)
+    ;; ex-mode shortcuts
     (define-key evil-ex-map "e " 'ido-find-file)
     (define-key evil-ex-map "b " 'ido-switch-buffer)
     (define-key evil-ex-map "pf " 'projectile-find-file)
