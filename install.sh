@@ -11,7 +11,8 @@ get_absolute_path() {
 if [ ! -d ~/.cask/ ]; then
 	curl -fsSkL https://raw.github.com/cask/cask/master/go | python
 
-	if test ! -f ~/.zshenv || grep --quiet cask ~/.zshenv; then
+    echo "" >> ~/.zshenv
+	if grep --quiet cask ~/.zshenv; then
 		echo "path+=(~/.cask/bin)" >> ~/.zshenv
 	fi
 	typeset -gxU path
