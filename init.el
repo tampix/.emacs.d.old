@@ -202,9 +202,18 @@
     (setq evil-default-cursor t)
     (evil-mode t)
 
+    (defun my-ret-and-indent ()
+      "Bind evil-ret-and-indent to the RET key in evil insert mode."
+      (define-key evil-insert-state-map (kbd "RET") 'evil-ret-and-indent)) 
+    (add-hook 'prog-mode-hook 'my-ret-and-indent)
+
+    (defun my-erc-send ()
+      "Bind evil-ret-and-indent to the RET key in evil insert mode."
+      (define-key evil-insert-state-map (kbd "RET") 'erc-send-current-line)) 
+    (add-hook 'erc-mode-hook 'my-erc-send)
+
     (evil-add-hjkl-bindings magit-status-mode-map 'emacs
       ":" 'evil-ex)
-    (define-key evil-insert-state-map (kbd "RET") 'evil-ret-and-indent)
     ;; ex-mode shortcuts
     (define-key evil-ex-map "e " 'ido-find-file)
     (define-key evil-ex-map "b " 'ido-switch-buffer)
