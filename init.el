@@ -31,17 +31,24 @@
 
 (require 'use-package)
 
-(use-package ir-black-theme
-  :config (load-theme 'ir-black :no-confirm))
+(use-package sublime-themes
+  :config
+  (progn
+    (load-theme 'granger :no-confirm)))
 
-(use-package powerline
-  :init (powerline-default-theme)
+(use-package smart-mode-line
+  :pre-load (setq sml/no-confirm-load-theme t)
+  :init (sml/setup)
   :config
   (progn
     (set-face-attribute 'mode-line nil
-			:box nil)
+			:foreground "gray30"
+			:background "black"
+			:box '(:color "black" :line-width 6))
     (set-face-attribute 'mode-line-inactive nil
-			:box nil)))
+			:foreground "gray5"
+			:background "black"
+			:box '(:color "black" :line-width 6))))
 
 (use-package org
   :config
