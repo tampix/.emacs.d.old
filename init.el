@@ -42,11 +42,11 @@
   :config
   (progn
     (set-face-attribute 'mode-line nil
-			:foreground "gray30"
+			:foreground "gray40"
 			:background "black"
 			:box '(:color "black" :line-width 6))
     (set-face-attribute 'mode-line-inactive nil
-			:foreground "gray5"
+			:foreground "gray15"
 			:background "black"
 			:box '(:color "black" :line-width 6))))
 
@@ -77,6 +77,7 @@
   :mode ("\\.tml\\'" . html-mode))
 
 (use-package projectile
+  :diminish projectile-mode
   :init (projectile-global-mode t)
   :config
   (progn
@@ -129,6 +130,7 @@
   :init
   (progn
     (use-package eldoc
+      :diminish eldoc-mode
       :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
     (use-package rainbow-delimiters
       :init
@@ -154,6 +156,7 @@
     (setq ag-reuse-window t)))
 
 (use-package company
+  :diminish company-mode
   :init (global-company-mode t)
   :config
   (progn
@@ -173,6 +176,7 @@
     (add-hook 'emacs-lisp-mode-hook 'rainbow-turn-on)))
 
 (use-package git-gutter-fringe+
+  :diminish git-gutter+-mode
   :init (global-git-gutter+-mode t)
   :config
   (progn
@@ -203,6 +207,9 @@
 			  "Nick: "
 			  (with-current-buffer "&bitlbee" erc-channel-users))))
       (with-current-buffer "&bitlbee" (erc-cmd-QUERY nick)))))
+
+(use-package undo-tree
+  :diminish undo-tree-mode)
 
 (use-package evil
   :pre-load

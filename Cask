@@ -10,6 +10,7 @@
 (depends-on "evil-visualstar")
 (depends-on "flx-ido")
 (depends-on "git-gutter-fringe+")
+(depends-on "git-timemachine")
 (depends-on "google-c-style")
 (depends-on "highlight-parentheses")
 (depends-on "ido-ubiquitous")
