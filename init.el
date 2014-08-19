@@ -76,6 +76,9 @@
 (use-package sgml-mode
   :mode ("\\.tml\\'" . html-mode))
 
+(use-package abbrev
+  :diminish abbrev-mode)
+
 (use-package projectile
   :diminish projectile-mode
   :init (projectile-global-mode t)
@@ -86,6 +89,7 @@
     (setq projectile-switch-project-action 'projectile-vc)))
 
 (use-package magit
+  :diminish magit-auto-revert-mode
   :init
   (progn
     (use-package magit-blame))
