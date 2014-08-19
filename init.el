@@ -101,7 +101,7 @@
     (setq ido-create-new-buffer 'always)
     (use-package ido-other-window
       :config
-      (progn 
+      (progn
 	(defun my-ido-split-keys ()
 	  "Add my keybindings to enable window splitting with ido."
 	  (mapcar (lambda (map)
@@ -128,24 +128,17 @@
 (use-package emacs-lisp-mode
   :init
   (progn
-    (use-package paredit
-      :init (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode))
     (use-package eldoc
-      :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-      :config
-      (progn
-	(eldoc-add-command
-	 'paredit-backward-delete
-	 'paredit-close-round)))
+      :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
     (use-package rainbow-delimiters
       :init
-      (progn 
+      (progn
 	(defun turn-on-rainbow-delimiters-mode ()
 	  (rainbow-delimiters-mode t))
 	(add-hook 'emacs-lisp-mode-hook 'turn-on-rainbow-delimiters-mode)))
     (use-package highlight-parentheses
       :init
-      (progn 
+      (progn
 	(defun turn-on-highlight-parentheses-mode ()
 	  (highlight-parentheses-mode t))
 	(add-hook 'emacs-lisp-mode-hook 'turn-on-highlight-parentheses-mode))))
@@ -163,7 +156,7 @@
 (use-package company
   :init (global-company-mode t)
   :config
-  (progn 
+  (progn
     (setq company-transformers '(company-sort-by-occurrence))
     (setq company-require-match t)
     ;; key mapping
@@ -185,6 +178,32 @@
   (progn
     (git-gutter-fr+-minimal)))
 
+(use-package erc
+  :config
+  (progn
+    (defun bitlbee-identify ()
+      "If we're on the bitlbee server, send the identify command to the
+ &bitlbee channel."
+      (when (and (string= "localhost" erc-session-server)
+		 (string= "&bitlbee" (buffer-name)))
+	(erc-message "PRIVMSG" (format "%s identify %s"
+				       (erc-default-target)
+				       bitlbee-password))))
+    (add-hook 'erc-join-hook 'bitlbee-identify)
+
+    (defun bitlbee (password)
+      "Connect to IM networks using bitlbee."
+      (interactive "sPassword: ")
+      (setq bitlbee-password password)
+      (erc :server "localhost" :port 6667 :nick "tampix"))
+
+    (defun my-erc-bitlbee-query (nick)
+      "Query someone from the &bitlbee channel."
+      (interactive (list (completing-read
+			  "Nick: "
+			  (with-current-buffer "&bitlbee" erc-channel-users))))
+      (with-current-buffer "&bitlbee" (erc-cmd-QUERY nick)))))
+
 (use-package evil
   :pre-load
   (progn
@@ -204,13 +223,16 @@
 
     (defun my-ret-and-indent ()
       "Bind evil-ret-and-indent to the RET key in evil insert mode."
-      (define-key evil-insert-state-map (kbd "RET") 'evil-ret-and-indent)) 
+      (define-key evil-insert-state-map (kbd "RET") 'evil-ret-and-indent))
     (add-hook 'prog-mode-hook 'my-ret-and-indent)
 
     (defun my-erc-send ()
       "Bind evil-ret-and-indent to the RET key in evil insert mode."
-      (define-key evil-insert-state-map (kbd "RET") 'erc-send-current-line)) 
+      (define-key evil-insert-state-map (kbd "RET") 'erc-send-current-line))
     (add-hook 'erc-mode-hook 'my-erc-send)
+
+    ;; ERC fix
+    (define-key erc-mode-map [remap evil-ret] 'erc-send-current-line)
 
     (evil-add-hjkl-bindings magit-status-mode-map 'emacs
       ":" 'evil-ex)
@@ -220,6 +242,8 @@
     (define-key evil-ex-map "pf " 'projectile-find-file)
     (define-key evil-ex-map "ps " 'projectile-switch-project)
     (define-key evil-ex-map "pa " 'projectile-ag)
+    (define-key evil-ex-map "pb " 'projectile-switch-to-buffer)
+    (define-key evil-ex-map "bc " 'my-erc-bitlbee-query)
     ;; Vim-ism ;]
     (define-key evil-normal-state-map "Y" (kbd "y$"))
     ;; ESC exit from anywhere
