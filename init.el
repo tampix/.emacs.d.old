@@ -196,13 +196,14 @@
 		 (string= "&bitlbee" (buffer-name)))
 	(erc-message "PRIVMSG" (format "%s identify %s"
 				       (erc-default-target)
-				       bitlbee-password))))
+				       bitlbee-password)))
+      (clear-string bitlbee-password))
     (add-hook 'erc-join-hook 'bitlbee-identify)
 
-    (defun bitlbee (password)
+    (defun bitlbee ()
       "Connect to IM networks using bitlbee."
-      (interactive "sPassword: ")
-      (setq bitlbee-password password)
+      (interactive)
+      (setq bitlbee-password (read-passwd "Password: "))
       (erc :server "localhost" :port 6667 :nick "tampix"))
 
     (defun my-erc-bitlbee-query (nick)
