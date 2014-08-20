@@ -126,6 +126,8 @@
       :config (setq ido-use-face nil))
     (use-package ido-ubiquitous
       :init (ido-ubiquitous-mode t))
+    (use-package ido-hacks
+      :init (ido-hacks-mode t))
     (use-package smex
       :init (smex-initialize)
       :bind ("M-x" . smex))))
@@ -189,6 +191,8 @@
 (use-package erc
   :config
   (progn
+    (use-package erc-hl-nicks
+      :init (erc-hl-nicks-enable))
     (defun bitlbee-identify ()
       "If we're on the bitlbee server, send the identify command to the
  &bitlbee channel."
