@@ -104,20 +104,22 @@
   (progn
     (setq ido-everywhere t)
     (setq ido-create-new-buffer 'always)
+    (setq ido-default-buffer-method 'selected-window)
     (use-package ido-other-window
       :config
       (progn
 	(defun my-ido-split-keys ()
 	  "Add my keybindings to enable window splitting with ido."
-	  (mapcar (lambda (map)
-		    (define-key map (kbd "C-o") 'ido-invoke-in-other-window)
-		    (define-key map (kbd "C-h") 'ido-invoke-in-vertical-split)
-		    (define-key map (kbd "C-v") 'ido-invoke-in-horizontal-split)
-		    (define-key map (kbd "C-t") 'ido-invoke-in-new-frame))
-		  (list ido-buffer-completion-map
-			ido-common-completion-map
-			ido-file-completion-map
-			ido-file-dir-completion-map)))
+	  (mapcar
+	   (lambda (map)
+	     (define-key map (kbd "C-o") 'ido-invoke-in-other-window)
+	     (define-key map (kbd "C-h") 'ido-invoke-in-vertical-split)
+	     (define-key map (kbd "C-v") 'ido-invoke-in-horizontal-split)
+	     (define-key map (kbd "C-t") 'ido-invoke-in-new-frame))
+	   (list ido-buffer-completion-map
+		 ido-common-completion-map
+		 ido-file-completion-map
+		 ido-file-dir-completion-map)))
 	(add-hook 'ido-setup-hook 'my-ido-split-keys)))
     (use-package ido-vertical-mode
       :init (ido-vertical-mode t))
@@ -215,10 +217,28 @@
       (interactive (list (completing-read
 			  "Nick: "
 			  (with-current-buffer "&bitlbee" erc-channel-users))))
-      (with-current-buffer "&bitlbee" (erc-cmd-QUERY nick)))))
+      (with-current-buffer "&bitlbee" (erc-cmd-QUERY nick)))
+
+    (defun my-erc-switch-buffer ()
+      "Switch to an ERC buffer using ido completion."
+      (interactive)
+      (switch-to-buffer
+       (ido-completing-read
+	"ERC Buffer:"
+	(save-excursion
+	  (delq nil (mapcar (lambda (buf)
+			      (when (buffer-live-p buf)
+				(with-current-buffer buf
+				  (and (eq major-mode 'erc-mode)
+				       (buffer-name buf)))))
+			    (buffer-list)))))))
+    ))
 
 (use-package undo-tree
   :diminish undo-tree-mode)
+
+(use-package uniquify
+  :init (setq uniquify-buffer-name-style 'post-forward-angle-brackets))
 
 (use-package evil
   :pre-load
@@ -239,6 +259,12 @@
 
     (evil-add-hjkl-bindings magit-status-mode-map 'emacs
       ":" 'evil-ex)
+    ;; move ESC and SPC from motion state to normal state
+    (mapcar
+     (lambda (k)
+       (define-key evil-normal-state-map k (lookup-key evil-motion-state-map k))
+       (define-key evil-motion-state-map k nil))
+     (list (kbd "RET") " "))
     ;; ex-mode shortcuts
     (define-key evil-ex-map "e " 'ido-find-file)
     (define-key evil-ex-map "b " 'ido-switch-buffer)
@@ -246,7 +272,8 @@
     (define-key evil-ex-map "ps " 'projectile-switch-project)
     (define-key evil-ex-map "pa " 'projectile-ag)
     (define-key evil-ex-map "pb " 'projectile-switch-to-buffer)
-    (define-key evil-ex-map "bc " 'my-erc-bitlbee-query)
+    (define-key evil-ex-map "ee " 'my-erc-bitlbee-query)
+    (define-key evil-ex-map "eb " 'my-erc-switch-buffer)
     ;; Vim-ism ;]
     (define-key evil-normal-state-map "Y" (kbd "y$"))
     ;; ESC exit from anywhere
