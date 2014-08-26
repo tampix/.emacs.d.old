@@ -33,7 +33,7 @@
 
 (use-package sublime-themes
   :config
-  (if window-system
+  (if (display-graphic-p)
       (progn
 	(load-theme 'granger :no-confirm)
 	(use-package granger-erc
