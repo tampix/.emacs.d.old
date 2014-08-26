@@ -33,12 +33,7 @@
 
 (use-package sublime-themes
   :config
-  (if (display-graphic-p)
-      (progn
-	(load-theme 'granger :no-confirm)
-	(use-package granger-erc
-	  :config
-	  (load-theme 'granger-erc :no-confirm)))))
+  (load-theme 'granger :no-confirm))
 
 (use-package smart-mode-line
   :pre-load (setq sml/no-confirm-load-theme t)
@@ -77,8 +72,17 @@
 		      tab-width 4
 		      indent-tabs-mode t)))))
 
-(use-package sgml-mode
-  :mode ("\\.tml\\'" . html-mode))
+(use-package nxml-mode
+  :config
+  (progn
+    (fset 'html-mode 'nxml-mode)
+    (setq nxml-slash-auto-complete-flag t)
+
+    (defun my-nxml-indent-hook ()
+      "Indent with spaces instead of tabs"
+      (setq indent-tabs-mode nil))
+    (add-hook 'nxml-mode-hook 'my-nxml-indent-hook))
+  :mode ("\\.tml\\'" . nxml-mode))
 
 (use-package abbrev
   :diminish abbrev-mode)
@@ -88,6 +92,10 @@
   :init (projectile-global-mode t)
   :config
   (progn
+    ;; Tapestry settings
+    (add-to-list 'projectile-other-file-alist (list "java" ".tml"))
+    (add-to-list 'projectile-other-file-alist (list "tml" ".java"))
+
     (setq projectile-enable-caching t)
     (setq projectile-completion-system 'ido)
     (setq projectile-switch-project-action 'projectile-vc)))
@@ -246,10 +254,9 @@
 
 (use-package evil
   :pre-load
-  (progn
-    (setq evil-want-C-u-scroll t)
-    (setq evil-want-C-i-jump t)
-    (setq evil-want-C-w-in-emacs-state t))
+  (setq evil-want-C-u-scroll t
+	evil-want-C-i-jump t
+	evil-want-C-w-in-emacs-state t)
   :init
   (progn
     (use-package evil-leader
@@ -276,6 +283,7 @@
     (define-key evil-ex-map "ps " 'projectile-switch-project)
     (define-key evil-ex-map "pa " 'projectile-ag)
     (define-key evil-ex-map "pb " 'projectile-switch-to-buffer)
+    (define-key evil-ex-map "po " 'projectile-find-other-file)
     (define-key evil-ex-map "ee " 'my-erc-bitlbee-query)
     (define-key evil-ex-map "eb " 'my-erc-switch-buffer)
     ;; Vim-ism ;]
