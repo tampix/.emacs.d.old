@@ -33,8 +33,12 @@
 
 (use-package sublime-themes
   :config
-  (progn
-    (load-theme 'granger :no-confirm)))
+  (if window-system
+      (progn
+	(load-theme 'granger :no-confirm)
+	(use-package granger-erc
+	  :config
+	  (load-theme 'granger-erc :no-confirm)))))
 
 (use-package smart-mode-line
   :pre-load (setq sml/no-confirm-load-theme t)
