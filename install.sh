@@ -8,8 +8,14 @@ get_absolute_path() {
 	popd > /dev/null
 }
 
+command_exists() {
+    command -v $1 >- 2>-
+}
+
 if [ ! -d ~/.cask/ ]; then
 	curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+fi
+if ! command_exists cask; then
 	echo "path+=(~/.cask/bin)" >> ~/.zshenv
 	typeset -gxU path
 	path+=(~/.cask/bin)
