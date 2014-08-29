@@ -9,7 +9,7 @@ get_absolute_path() {
 }
 
 command_exists() {
-    command -v $1 >- 2>-
+    command -v $1 > /dev/null 2>&1
 }
 
 if [ ! -d ~/.cask/ ]; then
