@@ -29,6 +29,17 @@
 (cask-initialize)
 (require 'pallet)
 
+(put 'narrow-to-region 'disabled nil)
+
+(defun narrow-to-region-indirect (start end)
+  "Restrict editing in this buffer to the current region, indirectly."
+  (interactive "r")
+  (deactivate-mark)
+  (let ((buf (clone-indirect-buffer nil nil)))
+    (with-current-buffer buf
+      (narrow-to-region start end))
+    (switch-to-buffer buf)))
+
 (require 'use-package)
 
 (use-package sublime-themes
@@ -78,11 +89,17 @@
     (fset 'html-mode 'nxml-mode)
     (setq nxml-slash-auto-complete-flag t)
 
+    (defadvice nxml-cleanup (around nxml-cleanup-no-widen activate)
+      "Avoid the use of widen in nxml-cleanup which defeats the purpose of indirect
+buffers."
+      (flet ((widen () (ignore)))
+	ad-do-it))
+
     (defun my-nxml-indent-hook ()
       "Indent with spaces instead of tabs"
       (setq indent-tabs-mode nil))
     (add-hook 'nxml-mode-hook 'my-nxml-indent-hook))
-  :mode ("\\.tml\\'" . nxml-mode))
+  :mode ("\\.tml$" . nxml-mode))
 
 (use-package abbrev
   :diminish abbrev-mode)
@@ -93,8 +110,8 @@
   :config
   (progn
     ;; Tapestry settings
-    (add-to-list 'projectile-other-file-alist (list "java" ".tml"))
-    (add-to-list 'projectile-other-file-alist (list "tml" ".java"))
+    (add-to-list 'projectile-other-file-alist (list ".java" ".tml" "Impl.java"))
+    (add-to-list 'projectile-other-file-alist (list ".tml" ".java"))
 
     (setq projectile-enable-caching t)
     (setq projectile-completion-system 'ido)
@@ -256,7 +273,8 @@
   :pre-load
   (setq evil-want-C-u-scroll t
 	evil-want-C-i-jump t
-	evil-want-C-w-in-emacs-state t)
+	evil-want-C-w-in-emacs-state t
+	evil-search-module 'evil-search)
   :init
   (progn
     (use-package evil-leader
@@ -295,4 +313,12 @@
     (define-key minibuffer-local-ns-map [escape] 'abort-recursive-edit)
     (define-key minibuffer-local-completion-map [escape] 'abort-recursive-edit)
     (define-key minibuffer-local-must-match-map [escape] 'abort-recursive-edit)
-    (define-key minibuffer-local-isearch-map [escape] 'abort-recursive-edit)))
+    (define-key minibuffer-local-isearch-map [escape] 'abort-recursive-edit)
+
+    (evil-define-operator evil-narrow-indirect (beg end type)
+      "Indirectly narrow the region from BEG to END."
+      (interactive "<R>")
+      (evil-normal-state)
+      (narrow-to-region-indirect beg end))
+    (define-key evil-normal-state-map "," 'evil-narrow-indirect)
+    (define-key evil-visual-state-map "," 'evil-narrow-indirect)))
