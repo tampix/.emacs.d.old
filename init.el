@@ -219,7 +219,12 @@ buffers."
   (progn
     (git-gutter-fr+-minimal)))
 
+(use-package sauron
+  (setq sauron-modules '(sauron-erc
+			 sauron-notifications)))
+
 (use-package erc
+  :commands bitlbee
   :config
   (progn
     (use-package erc-hl-nicks
@@ -261,13 +266,20 @@ buffers."
 				  (and (eq major-mode 'erc-mode)
 				       (buffer-name buf)))))
 			    (buffer-list)))))))
-    ))
+
+    (setq erc-flood-protect nil)
+    (setq sauron-watch-patterns erc-keywords)))
 
 (use-package undo-tree
   :diminish undo-tree-mode)
 
 (use-package uniquify
   :init (setq uniquify-buffer-name-style 'post-forward-angle-brackets))
+
+(use-package ace-jump-mode
+  :commands ace-jump-mode
+  :config
+  (setq ace-jump-mode-scope 'window))
 
 (use-package evil
   :pre-load
@@ -294,6 +306,12 @@ buffers."
        (define-key evil-normal-state-map k (lookup-key evil-motion-state-map k))
        (define-key evil-motion-state-map k nil))
      (list (kbd "RET") " "))
+    ;; normal-mode shortcuts
+    (define-key evil-normal-state-map (kbd "SPC") 'evil-ace-jump-char-mode)
+    (define-key evil-normal-state-map (kbd "S-SPC") 'evil-ace-jump-word-mode)
+    (define-key evil-normal-state-map (kbd "C-SPC") 'evil-ace-jump-word-no-prefix-mode)
+    (define-key evil-normal-state-map (kbd "+") 'evil-numbers/inc-at-pt)
+    (define-key evil-normal-state-map (kbd "-") 'evil-numbers/dec-at-pt)
     ;; ex-mode shortcuts
     (define-key evil-ex-map "e " 'ido-find-file)
     (define-key evil-ex-map "b " 'ido-switch-buffer)
@@ -315,10 +333,15 @@ buffers."
     (define-key minibuffer-local-must-match-map [escape] 'abort-recursive-edit)
     (define-key minibuffer-local-isearch-map [escape] 'abort-recursive-edit)
 
+    (evil-define-motion evil-ace-jump-word-no-prefix-mode (count)
+      "ace-jump-word-mode without having to imput the head char."
+      (let ((ace-jump-word-mode-use-query-char nil))
+	(evil-ace-jump-word-mode count)))
+
     (evil-define-operator evil-narrow-indirect (beg end type)
       "Indirectly narrow the region from BEG to END."
       (interactive "<R>")
       (evil-normal-state)
       (narrow-to-region-indirect beg end))
-    (define-key evil-normal-state-map "," 'evil-narrow-indirect)
-    (define-key evil-visual-state-map "," 'evil-narrow-indirect)))
+    (define-key evil-normal-state-map "\n" 'evil-narrow-indirect)
+    (define-key evil-visual-state-map "\n" 'evil-narrow-indirect)))

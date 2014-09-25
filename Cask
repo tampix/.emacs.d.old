@@ -1,6 +1,7 @@
 (source gnu)
 (source melpa)
 
+(depends-on "ace-jump-mode")
 (depends-on "ag")
 (depends-on "coffee-mode")
 (depends-on "company")
@@ -25,6 +26,7 @@
 (depends-on "projectile")
 (depends-on "rainbow-delimiters")
 (depends-on "rainbow-mode")
+(depends-on "sauron")
 (depends-on "smart-mode-line")
 (depends-on "smex")
 (depends-on "sublime-themes")
