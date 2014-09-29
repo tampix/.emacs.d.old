@@ -220,8 +220,21 @@ buffers."
     (git-gutter-fr+-minimal)))
 
 (use-package sauron
-  (setq sauron-modules '(sauron-erc
-			 sauron-notifications)))
+  :commands sauron-start-hidden
+  :config
+  (progn
+    (setq sauron-modules '(sauron-erc
+			   sauron-notifications))
+
+    (defun my-sauron-event-handler (origin prio msg &optional props)
+      "Use libnotify for incomming priv msg."
+      (if (eq origin 'erc)
+	  (let*
+	      ((sender (plist-get props :sender))
+	       (timestamp (format-time-string "%X")))
+	  (sauron-fx-notify (format "%s [%s]" sender timestamp) msg 6000))))
+
+    (add-hook 'sauron-event-added-functions 'my-sauron-event-handler)))
 
 (use-package erc
   :commands bitlbee
@@ -244,7 +257,8 @@ buffers."
       "Connect to IM networks using bitlbee."
       (interactive)
       (setq bitlbee-password (read-passwd "Password: "))
-      (erc :server "localhost" :port 6667 :nick "tampix"))
+      (erc :server "localhost" :port 6667 :nick "tampix")
+      (sauron-start-hidden))
 
     (defun my-erc-bitlbee-query (nick)
       "Query someone from the &bitlbee channel."
@@ -267,8 +281,7 @@ buffers."
 				       (buffer-name buf)))))
 			    (buffer-list)))))))
 
-    (setq erc-flood-protect nil)
-    (setq sauron-watch-patterns erc-keywords)))
+    (setq erc-flood-protect nil)))
 
 (use-package undo-tree
   :diminish undo-tree-mode)
