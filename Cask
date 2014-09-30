@@ -14,6 +14,7 @@
 (depends-on "git-gutter-fringe+")
 (depends-on "git-timemachine")
 (depends-on "google-c-style")
+(depends-on "highlight-numbers")
 (depends-on "highlight-parentheses")
 (depends-on "ido-hacks")
 (depends-on "ido-ubiquitous")

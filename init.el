@@ -60,6 +60,9 @@
 			:background "black"
 			:box '(:color "black" :line-width 6))))
 
+(use-package highlight-numbers
+  :init (highlight-numbers-mode t))
+
 (use-package org
   :config
   (progn
