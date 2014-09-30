@@ -63,6 +63,9 @@
 (use-package highlight-numbers
   :init (highlight-numbers-mode t))
 
+(use-package highlight-quoted
+  :init (highlight-quoted-mode t))
+
 (use-package org
   :config
   (progn

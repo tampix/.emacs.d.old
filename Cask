@@ -16,6 +16,7 @@
 (depends-on "google-c-style")
 (depends-on "highlight-numbers")
 (depends-on "highlight-parentheses")
+(depends-on "highlight-quoted")
 (depends-on "ido-hacks")
 (depends-on "ido-ubiquitous")
 (depends-on "ido-vertical-mode")
