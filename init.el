@@ -312,7 +312,8 @@ buffers."
     (evil-mode t)
 
     (evil-add-hjkl-bindings magit-status-mode-map 'emacs
-      ":" 'evil-ex)
+      ":" 'evil-ex
+      "K" 'magit-discard-item)
     ;; move ESC and SPC from motion state to normal state
     (mapcar
      (lambda (k)
