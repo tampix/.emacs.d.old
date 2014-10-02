@@ -147,6 +147,7 @@ buffers."
 	  "Add my keybindings to enable window splitting with ido."
 	  (mapcar
 	   (lambda (map)
+	     (define-key map (kbd "<C-return>") 'ido-exit-minibuffer)
 	     (define-key map (kbd "C-o") 'ido-invoke-in-other-window)
 	     (define-key map (kbd "C-h") 'ido-invoke-in-vertical-split)
 	     (define-key map (kbd "C-v") 'ido-invoke-in-horizontal-split)
