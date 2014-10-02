@@ -3,6 +3,7 @@
 
 (depends-on "ace-jump-mode")
 (depends-on "ag")
+(depends-on "benchmark-init")
 (depends-on "coffee-mode")
 (depends-on "company")
 (depends-on "eldoc")

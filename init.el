@@ -1,3 +1,9 @@
+(defun my-show-startup-time ()
+  "Show Emacs's startup time in the minibuffer"
+  (message "Startup time: %s seconds."
+           (emacs-uptime "%s")))
+(add-hook 'emacs-startup-hook 'my-show-startup-time 'append)
+
 (require 'server)
 (unless (server-running-p)
   (server-start))
@@ -42,6 +48,9 @@
 
 (require 'use-package)
 
+(require 'benchmark-init)
+(add-hook 'after-init-hook 'benchmark-init/deactivate)
+
 (use-package sublime-themes
   :config
   (load-theme 'granger :no-confirm))
@@ -67,6 +76,7 @@
   :init (highlight-quoted-mode t))
 
 (use-package org
+  :commands org-mode
   :config
   (progn
     (define-key global-map "\C-ca" 'org-agenda)
@@ -77,6 +87,7 @@
   :init (show-paren-mode t))
 
 (use-package cc-mode
+  :defer t
   :config
   (progn
     (add-hook 'c-mode-hook
@@ -90,6 +101,7 @@
 		      indent-tabs-mode t)))))
 
 (use-package nxml-mode
+  :defer t
   :config
   (progn
     (fset 'html-mode 'nxml-mode)
@@ -112,9 +124,17 @@ buffers."
 
 (use-package projectile
   :diminish projectile-mode
-  :init (projectile-global-mode t)
+  :commands projectile-global-mode
+  :idle (projectile-global-mode t)
   :config
   (progn
+    (use-package git-gutter-fringe+
+      :diminish git-gutter+-mode
+      :commands global-git-gutter+-mode
+      :idle (global-git-gutter+-mode t)
+      :config
+      (progn
+	(git-gutter-fr+-minimal)))
     ;; Tapestry settings
     (add-to-list 'projectile-other-file-alist (list ".java" ".tml" "Impl.java"))
     (add-to-list 'projectile-other-file-alist (list ".tml" ".java"))
@@ -125,16 +145,17 @@ buffers."
 
 (use-package magit
   :diminish magit-auto-revert-mode
+  :commands (magit-status magit-diff magit-log)
   :init
   (progn
-    (use-package magit-blame))
+    (use-package magit-blame
+      :commands  magit-blame-mode))
   :config
   (progn
-    (setq magit-status-buffer-switch-function 'switch-to-buffer))
-  :commands magit-status)
+    (setq magit-status-buffer-switch-function 'switch-to-buffer)))
 
 (use-package ido
-  :init (ido-mode t)
+  :idle (ido-mode t)
   :config
   (progn
     (setq ido-everywhere t)
@@ -174,15 +195,18 @@ buffers."
   :init
   (progn
     (use-package eldoc
+      :commands eldoc-mode
       :diminish eldoc-mode
       :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
     (use-package rainbow-delimiters
+      :commands rainbow-delimiters-mode
       :init
       (progn
 	(defun turn-on-rainbow-delimiters-mode ()
 	  (rainbow-delimiters-mode t))
 	(add-hook 'emacs-lisp-mode-hook 'turn-on-rainbow-delimiters-mode)))
     (use-package highlight-parentheses
+      :commands highlight-parentheses-mode
       :init
       (progn
 	(defun turn-on-highlight-parentheses-mode ()
@@ -194,6 +218,7 @@ buffers."
   :mode ("README\\.md\\'" . gfm-mode))
 
 (use-package ag
+  :commands (ag ag-files ag-regexp ag-project ag-project-files ag-project-regexp)
   :config
   (progn
     (setq ag-reuse-buffers t)
@@ -201,6 +226,7 @@ buffers."
 
 (use-package company
   :diminish company-mode
+  :commands global-company-mode
   :init (global-company-mode t)
   :config
   (progn
@@ -213,18 +239,12 @@ buffers."
     (define-key company-active-map (kbd "<tab>") 'company-complete)))
 
 (use-package rainbow-mode
+  :commands rainbow-turn-on
   :init
   (progn
     (add-hook 'css-mode-hook 'rainbow-turn-on)
     (add-hook 'html-mode-hook 'rainbow-turn-on)
     (add-hook 'emacs-lisp-mode-hook 'rainbow-turn-on)))
-
-(use-package git-gutter-fringe+
-  :diminish git-gutter+-mode
-  :init (global-git-gutter+-mode t)
-  :config
-  (progn
-    (git-gutter-fr+-minimal)))
 
 (use-package sauron
   :commands sauron-start-hidden
@@ -239,7 +259,7 @@ buffers."
 	  (let*
 	      ((sender (plist-get props :sender))
 	       (timestamp (format-time-string "%X")))
-	  (sauron-fx-notify (format "%s [%s]" sender timestamp) msg 6000))))
+	    (sauron-fx-notify (format "%s [%s]" sender timestamp) msg 6000))))
 
     (add-hook 'sauron-event-added-functions 'my-sauron-event-handler)))
 
@@ -291,7 +311,11 @@ buffers."
     (setq erc-flood-protect nil)))
 
 (use-package undo-tree
-  :diminish undo-tree-mode)
+  :diminish undo-tree-mode
+  :commands undo-tree-mode
+  :config
+  (setq undo-tree-visualizer-diff t
+        undo-tree-visualizer-timestamps t))
 
 (use-package uniquify
   :init (setq uniquify-buffer-name-style 'post-forward-angle-brackets))
@@ -303,13 +327,14 @@ buffers."
 
 (use-package smartparens
   :diminish smartparens-mode
-  :idle (smartparens-global-mode)
+  :commands smartparens-global-mode
+  :idle (smartparens-global-mode t)
   :config
   (progn
     (add-hook 'erc-mode-hook 'smartparens-disabled-hook)
     (sp-pair "'" nil :unless '(sp-point-after-word-p))
     (sp-local-pair '(emacs-lisp-mode org-mode git-commit-mode) "`" "'")
-    (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil))
+    (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)))
 
 (use-package evil
   :pre-load
@@ -324,7 +349,23 @@ buffers."
       )
     (use-package evil-visualstar)
     (use-package evil-surround
-      :init (global-evil-surround-mode 1)))
+      :commands global-evil-surround-mode
+      :idle (global-evil-surround-mode t)
+      :config
+      (setq-default surround-pairs-alist
+		    '((?\( . ("(" . ")"))
+		      (?\[ . ("[" . "]"))
+		      (?\{ . ("{" . "}"))
+		      (?\) . ("( " . " )"))
+		      (?\] . ("[ " . " ]"))
+		      (?\} . ("{ " . " }"))
+		      (?# . ("#{" . "}"))
+		      (?b . ("(" . ")"))
+		      (?B . ("{" . "}"))
+		      (?> . ("<" . ">"))
+		      (?t . evil-surround-read-tag)
+		      (?< . evil-surround-read-tag)
+		      (?f . evil-surround-function)))))
   :config
   (progn
     (setq evil-default-cursor t)
