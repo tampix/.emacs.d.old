@@ -301,6 +301,16 @@ buffers."
   :config
   (setq ace-jump-mode-scope 'window))
 
+(use-package smartparens
+  :diminish smartparens-mode
+  :idle (smartparens-global-mode)
+  :config
+  (progn
+    (add-hook 'erc-mode-hook 'smartparens-disabled-hook)
+    (sp-pair "'" nil :unless '(sp-point-after-word-p))
+    (sp-local-pair '(emacs-lisp-mode org-mode git-commit-mode) "`" "'")
+    (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil))
+
 (use-package evil
   :pre-load
   (setq evil-want-C-u-scroll t
@@ -312,7 +322,9 @@ buffers."
     (use-package evil-leader
       ; TODO
       )
-    (use-package evil-visualstar))
+    (use-package evil-visualstar)
+    (use-package evil-surround
+      :init (global-evil-surround-mode 1)))
   :config
   (progn
     (setq evil-default-cursor t)
@@ -320,7 +332,9 @@ buffers."
 
     (evil-add-hjkl-bindings magit-status-mode-map 'emacs
       ":" 'evil-ex
-      "K" 'magit-discard-item)
+      "K" 'magit-discard-item
+      "l" 'magit-key-mode-popup-logging
+      "h" 'magit-diff-toggle-refine-hunk)
     ;; move ESC and SPC from motion state to normal state
     (mapcar
      (lambda (k)
@@ -328,9 +342,6 @@ buffers."
        (define-key evil-motion-state-map k nil))
      (list (kbd "RET") " "))
     ;; normal-mode shortcuts
-    (define-key evil-normal-state-map (kbd "SPC") 'evil-ace-jump-char-mode)
-    (define-key evil-normal-state-map (kbd "S-SPC") 'evil-ace-jump-word-mode)
-    (define-key evil-normal-state-map (kbd "C-SPC") 'evil-ace-jump-word-no-prefix-mode)
     (define-key evil-normal-state-map (kbd "+") 'evil-numbers/inc-at-pt)
     (define-key evil-normal-state-map (kbd "-") 'evil-numbers/dec-at-pt)
     ;; ex-mode shortcuts
@@ -354,11 +365,50 @@ buffers."
     (define-key minibuffer-local-must-match-map [escape] 'abort-recursive-edit)
     (define-key minibuffer-local-isearch-map [escape] 'abort-recursive-edit)
 
+    ;; Evil ace-jump motions
     (evil-define-motion evil-ace-jump-word-no-prefix-mode (count)
       "ace-jump-word-mode without having to imput the head char."
       (let ((ace-jump-word-mode-use-query-char nil))
 	(evil-ace-jump-word-mode count)))
+    (define-key evil-normal-state-map (kbd "SPC") 'evil-ace-jump-char-mode)
+    (define-key evil-normal-state-map (kbd "S-SPC") 'evil-ace-jump-word-mode)
+    (define-key evil-normal-state-map (kbd "C-SPC") 'evil-ace-jump-word-no-prefix-mode)
 
+    ;; Evil smartparens motions
+    (evil-define-motion evil-sp-forward-sexp (count)
+      (let*
+	  ((evil-move-cursor-back nil))
+	(sp-forward-sexp count)))
+    (evil-define-motion evil-sp-backward-sexp (count)
+      (let*
+	  ((evil-move-cursor-back nil))
+	(sp-backward-sexp count)))
+    (evil-define-motion evil-sp-up-sexp (count)
+      (let*
+	  ((evil-move-cursor-back nil))
+	(sp-up-sexp count)))
+    (evil-define-motion evil-sp-backward-up-sexp (count)
+      (let*
+	  ((evil-move-cursor-back nil))
+	(sp-backward-up-sexp count)))
+    (evil-define-motion evil-sp-down-sexp (count)
+      (let*
+	  ((evil-move-cursor-back nil))
+	(sp-down-sexp count)))
+    (define-key evil-normal-state-map (kbd "[ x") 'evil-sp-backward-sexp)
+    (define-key evil-normal-state-map (kbd "] x") 'evil-sp-forward-sexp)
+    (define-key evil-normal-state-map (kbd "[ X") 'evil-sp-up-sexp)
+    (define-key evil-normal-state-map (kbd "] X") 'evil-sp-down-sexp)
+
+    ;; Evil smartparens text objects
+    (evil-define-text-object evil-a-sexp (count &optional beg end type)
+      (evil-an-object-range count beg end #'sp-forward-sexp #'sp-backward-sexp))
+    (evil-define-text-object evil-inner-sexp (count &optional beg end type)
+      (evil-inner-object-range count beg end #'sp-forward-sexp #'sp-backward-sexp))
+    (define-key evil-outer-text-objects-map "x" 'evil-a-sexp)
+    (define-key evil-inner-text-objects-map "x" 'evil-a-sexp)
+
+    ;; Evil narrow-indirect motions
     (evil-define-operator evil-narrow-indirect (beg end type)
       "Indirectly narrow the region from BEG to END."
       (interactive "<R>")
