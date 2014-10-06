@@ -19,20 +19,16 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
-
-(setq inhibit-startup-screen t)
-
-(toggle-truncate-lines t)
-
 (setq redisplay-dont-pause t
       scroll-step 1
-      scroll-conservatively 10000)
+      scroll-conservatively 10000
+      inhibit-startup-screen t
+      confirm-nonexistent-file-or-buffer nil
+      custom-file "~/.emacs.d/custom.el")
+(load custom-file)
 
+(toggle-truncate-lines t)
 (fset 'yes-or-no-p 'y-or-n-p)
-
-(setq confirm-nonexistent-file-or-buffer nil)
 
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
@@ -142,9 +138,9 @@ buffers."
     (add-to-list 'projectile-other-file-alist (list ".java" ".tml" "Impl.java"))
     (add-to-list 'projectile-other-file-alist (list ".tml" ".java"))
 
-    (setq projectile-enable-caching t)
-    (setq projectile-completion-system 'ido)
-    (setq projectile-switch-project-action 'projectile-vc)))
+    (setq projectile-enable-caching t
+	  projectile-completion-system 'ido
+	  projectile-switch-project-action 'projectile-vc)))
 
 (use-package magit
   :diminish magit-auto-revert-mode
@@ -161,9 +157,9 @@ buffers."
   :idle (ido-mode t)
   :config
   (progn
-    (setq ido-everywhere t)
-    (setq ido-create-new-buffer 'always)
-    (setq ido-default-buffer-method 'selected-window)
+    (setq ido-everywhere t
+	  ido-create-new-buffer 'always
+	  ido-default-buffer-method 'selected-window)
     (use-package ido-other-window
       :config
       (progn
@@ -224,8 +220,8 @@ buffers."
   :commands (ag ag-files ag-regexp ag-project ag-project-files ag-project-regexp)
   :config
   (progn
-    (setq ag-reuse-buffers t)
-    (setq ag-reuse-window t)))
+    (setq ag-reuse-buffers t
+	  ag-reuse-window t)))
 
 (use-package company
   :diminish company-mode
@@ -233,8 +229,8 @@ buffers."
   :idle (global-company-mode t)
   :config
   (progn
-    (setq company-transformers '(company-sort-by-occurrence))
-    (setq company-require-match t)
+    (setq company-transformers '(company-sort-by-occurrence)
+	  company-require-match t)
     ;; key mapping
     (define-key company-active-map (kbd "\C-n") 'company-select-next)
     (define-key company-active-map (kbd "\C-p") 'company-select-previous)
@@ -318,7 +314,7 @@ buffers."
   :commands undo-tree-mode
   :config
   (setq undo-tree-visualizer-diff t
-        undo-tree-visualizer-timestamps t))
+	undo-tree-visualizer-timestamps t))
 
 (use-package uniquify
   :init (setq uniquify-buffer-name-style 'post-forward-angle-brackets))
