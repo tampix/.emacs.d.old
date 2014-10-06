@@ -19,6 +19,8 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
+(setq-default major-mode 'text-mode)
+
 (setq redisplay-dont-pause t
       scroll-step 1
       scroll-conservatively 10000
@@ -122,8 +124,11 @@ buffers."
   :diminish abbrev-mode)
 
 (use-package projectile
-  :diminish projectile-mode
-  :commands projectile-global-mode
+  :diminish (projectile-mode)
+  :commands (projectile-global-mode
+	     projectile-find-file
+	     projectile-switch-project
+	     projectile-switch-to-buffer)
   :idle (projectile-global-mode t)
   :config
   (progn
@@ -144,7 +149,9 @@ buffers."
 
 (use-package magit
   :diminish magit-auto-revert-mode
-  :commands (magit-status magit-diff magit-log)
+  :commands (magit-status
+	     magit-diff
+	     magit-log)
   :init
   (progn
     (use-package magit-blame
@@ -217,7 +224,12 @@ buffers."
   :mode ("README\\.md\\'" . gfm-mode))
 
 (use-package ag
-  :commands (ag ag-files ag-regexp ag-project ag-project-files ag-project-regexp)
+  :commands (ag
+	     ag-files
+	     ag-regexp
+	     ag-project
+	     ag-project-files
+	     ag-project-regexp)
   :config
   (progn
     (setq ag-reuse-buffers t
