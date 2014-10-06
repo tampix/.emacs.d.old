@@ -331,7 +331,7 @@ buffers."
   :idle (smartparens-global-mode t)
   :config
   (progn
-    (add-hook 'erc-mode-hook 'smartparens-disabled-hook)
+    (add-hook 'erc-mode-hook 'turn-off-smartparens-mode)
     (sp-pair "'" nil :unless '(sp-point-after-word-p))
     (sp-local-pair '(emacs-lisp-mode org-mode git-commit-mode) "`" "'")
     (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)))
