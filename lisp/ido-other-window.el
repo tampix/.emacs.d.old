@@ -95,8 +95,8 @@
         ((equal ido-exit-minibuffer-target-window 'vertical)
          (split-window-vertically-and-switch))
         ((equal ido-exit-minibuffer-target-window 'frame)
-	 (save-excursion (with-current-buffer result (make-frame)))
-	 (select-frame-set-input-focus result)))
+	 (let ((frame (make-frame)))
+	   (select-frame-set-input-focus frame))))
 
        ;; why? Some ido commands, such as textmate.el's
        ;; textmate-goto-symbol don't switch the current buffer
