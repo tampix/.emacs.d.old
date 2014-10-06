@@ -14,6 +14,9 @@
      (funcall mode -1)))
  '(menu-bar-mode tool-bar-mode scroll-bar-mode))
 
+(line-number-mode t)
+(column-number-mode t)
+
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
 (setq custom-file "~/.emacs.d/custom.el")
@@ -227,7 +230,7 @@ buffers."
 (use-package company
   :diminish company-mode
   :commands global-company-mode
-  :init (global-company-mode t)
+  :idle (global-company-mode t)
   :config
   (progn
     (setq company-transformers '(company-sort-by-occurrence))
@@ -341,11 +344,14 @@ buffers."
   (setq evil-want-C-u-scroll t
 	evil-want-C-i-jump t
 	evil-want-C-w-in-emacs-state t
-	evil-search-module 'evil-search)
-  :init
+	evil-search-module 'evil-search
+	evil-default-cursor t)
+  :config
   (progn
+    (evil-mode t)
+    
     (use-package evil-leader
-      ; TODO
+      ;; TODO
       )
     (use-package evil-visualstar)
     (use-package evil-surround
@@ -365,11 +371,7 @@ buffers."
 		      (?> . ("<" . ">"))
 		      (?t . evil-surround-read-tag)
 		      (?< . evil-surround-read-tag)
-		      (?f . evil-surround-function)))))
-  :config
-  (progn
-    (setq evil-default-cursor t)
-    (evil-mode t)
+		      (?f . evil-surround-function))))
 
     (evil-add-hjkl-bindings magit-status-mode-map 'emacs
       ":" 'evil-ex
