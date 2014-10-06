@@ -48,8 +48,8 @@
 
 (require 'use-package)
 
-(require 'benchmark-init)
-(add-hook 'after-init-hook 'benchmark-init/deactivate)
+(use-package benchmark-init
+  :init (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 (use-package sublime-themes
   :config
