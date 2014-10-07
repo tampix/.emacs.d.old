@@ -357,7 +357,29 @@ buffers."
   :config
   (progn
     (evil-mode t)
-    
+
+    (defun my-client-frame-list ()
+      "List frames for current emacsclient."
+      (--filter (eq (frame-parameter it 'client)
+		    (frame-parameter (selected-frame) 'client))
+		(frame-list)))
+    (evil-define-command evil-quit (&optional bang)
+      "Closes the current window, current frame, Emacs.
+If the current frame is the only one that belongs to some client the
+client connection is closed."
+      :repeat nil
+      (interactive "<!>")
+      (condition-case nil
+	  (delete-window)
+	(error
+	 (condition-case nil
+	     (let ((proc (frame-parameter (selected-frame) 'client)))
+	       (if (and proc (= 1 (length (my-client-frame-list))))
+		   (evil-quit-all bang)
+		 (delete-frame)))
+	   (error
+	    (evil-quit-all bang))))))
+
     (use-package evil-leader
       ;; TODO
       )
