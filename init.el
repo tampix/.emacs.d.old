@@ -217,7 +217,15 @@ buffers."
       (progn
 	(defun turn-on-highlight-parentheses-mode ()
 	  (highlight-parentheses-mode t))
-	(add-hook 'emacs-lisp-mode-hook 'turn-on-highlight-parentheses-mode))))
+	(add-hook 'emacs-lisp-mode-hook 'turn-on-highlight-parentheses-mode)))
+
+    (defun my-setup-imenu-for-use-package ()
+      "Recognize `use-package' in imenu"
+      (when (string= buffer-file-name (expand-file-name "init.el" "~/.emacs.d"))
+	(add-to-list
+	 'imenu-generic-expression
+	 '("Packages" "^\\s-*(\\(use-package\\)\\s-+\\(\\(\\sw\\|\\s_\\)+\\)" 2))))
+    (add-hook 'emacs-lisp-mode-hook 'my-setup-imenu-for-use-package))
   :mode ("Cask" . emacs-lisp-mode))
 
 (use-package markdown-mode
