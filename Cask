@@ -9,6 +9,7 @@
 (depends-on "eldoc")
 (depends-on "erc-hl-nicks")
 (depends-on "evil")
+(depends-on "evil-jumper")
 (depends-on "evil-leader")
 (depends-on "evil-surround")
 (depends-on "evil-visualstar")

@@ -384,6 +384,7 @@ client connection is closed."
       ;; TODO
       )
     (use-package evil-visualstar)
+    (use-package evil-jumper)
     (use-package evil-surround
       :commands global-evil-surround-mode
       :idle (global-evil-surround-mode t)
