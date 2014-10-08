@@ -126,7 +126,7 @@ buffers."
 	     projectile-find-file
 	     projectile-switch-project
 	     projectile-switch-to-buffer)
-  :idle (projectile-global-mode t)
+  :init (projectile-global-mode t)
   :config
   (use-package git-gutter-fringe+
     :diminish git-gutter+-mode
@@ -154,8 +154,10 @@ buffers."
   (setq magit-status-buffer-switch-function 'switch-to-buffer))
 
 (use-package ido
-  :idle (ido-mode t)
-  :config
+  :commands (ido-find-file
+	     ido-switch-buffer)
+  :init
+  (ido-mode t)
   (setq ido-everywhere t
 	ido-create-new-buffer 'always
 	ido-default-buffer-method 'selected-window)
@@ -369,9 +371,6 @@ client connection is closed."
 	 (error
 	  (evil-quit-all bang))))))
 
-  (use-package evil-leader
-    ;; TODO
-    )
   (use-package evil-visualstar)
   (use-package evil-jumper)
   (use-package evil-surround
@@ -398,7 +397,7 @@ client connection is closed."
     "K" 'magit-discard-item
     "l" 'magit-key-mode-popup-logging
     "h" 'magit-diff-toggle-refine-hunk)
-  ;; move ESC and SPC from motion state to normal state
+  ;; move RET and SPC from motion state to normal state
   (mapcar
    (lambda (k)
      (define-key evil-normal-state-map k (lookup-key evil-motion-state-map k))
@@ -477,5 +476,5 @@ client connection is closed."
     (interactive "<R>")
     (evil-normal-state)
     (narrow-to-region-indirect beg end))
-  (define-key evil-normal-state-map "\n" 'evil-narrow-indirect)
-  (define-key evil-visual-state-map "\n" 'evil-narrow-indirect))
+  (define-key evil-normal-state-map (kbd ", n") 'evil-narrow-indirect)
+  (define-key evil-visual-state-map (kbd ", n") 'evil-narrow-indirect))
