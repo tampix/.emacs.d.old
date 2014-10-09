@@ -36,3 +36,4 @@
 (depends-on "smex")
 (depends-on "sublime-themes")
 (depends-on "use-package")
+(depends-on "volatile-highlights")

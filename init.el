@@ -70,10 +70,16 @@ indirectly."
 		      :background "black"
 		      :box '(:color "black" :line-width 6)))
 
+(use-package volatile-highlights
+  :diminish volatile-highlights-mode
+  :init (volatile-highlights-mode t))
+
 (use-package highlight-numbers
+  :diminish highlight-numbers-mode
   :init (highlight-numbers-mode t))
 
 (use-package highlight-quoted
+  :diminish highlight-quoted-mode
   :init (highlight-quoted-mode t))
 
 (use-package org
