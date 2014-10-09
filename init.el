@@ -24,6 +24,7 @@
 (setq redisplay-dont-pause t
       scroll-step 1
       scroll-conservatively 10000
+      inhibit-default-init t
       inhibit-startup-screen t
       confirm-nonexistent-file-or-buffer nil
       custom-file "~/.emacs.d/custom.el")
