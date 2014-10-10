@@ -54,6 +54,8 @@ indirectly."
 (use-package benchmark-init
   :init (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
+(use-package cl)
+
 (use-package sublime-themes
   :config
   (load-theme 'granger :no-confirm))
@@ -196,6 +198,15 @@ buffers."
   (use-package smex
     :init (smex-initialize)
     :bind ("M-x" . smex)))
+
+(use-package help-mode
+  :init
+  (defadvice help-button-action (around help-button-action-reuse-window activate)
+    "Reuse current window when following links."
+    ;; prevent changing the window
+    (flet ((pop-to-buffer (buffer &rest args)
+			  (switch-to-buffer buffer)))
+      ad-do-it)))
 
 (use-package emacs-lisp-mode
   :init
