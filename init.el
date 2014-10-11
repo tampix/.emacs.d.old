@@ -4,10 +4,6 @@
            (emacs-uptime "%s")))
 (add-hook 'emacs-startup-hook 'my-show-startup-time 'append)
 
-(require 'server)
-(unless (server-running-p)
-  (server-start))
-
 (mapc
  (lambda (mode)
    (when (fboundp mode)
@@ -55,6 +51,12 @@ indirectly."
   :init (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 (use-package cl)
+
+(use-package server
+  :if (display-graphic-p)
+  :init
+  (unless (server-running-p)
+    (server-start)))
 
 (use-package sublime-themes
   :config
@@ -291,6 +293,7 @@ buffers."
   :config
   (use-package erc-hl-nicks
     :init (erc-hl-nicks-enable))
+
   (defun bitlbee-identify ()
     "If we're on the bitlbee server, send the identify command to the
  &bitlbee channel."
