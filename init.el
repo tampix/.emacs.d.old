@@ -18,6 +18,7 @@
 (setq-default major-mode 'text-mode)
 
 (setq redisplay-dont-pause t
+      require-final-newline t
       scroll-step 1
       scroll-conservatively 10000
       inhibit-default-init t
