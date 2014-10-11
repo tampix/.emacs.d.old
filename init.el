@@ -12,8 +12,6 @@
 
 (line-number-mode t)
 (column-number-mode t)
-(global-hl-line-mode t)
-(set-face-background hl-line-face "gray5")
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
@@ -63,6 +61,12 @@ indirectly."
 (use-package sublime-themes
   :config
   (load-theme 'granger :no-confirm))
+
+(use-package hl-line
+  :init (global-hl-line-mode t)
+  :config
+  (set-face-background hl-line-face "gray5")
+  (set-face-foreground hl-line-face nil))
 
 (use-package smart-mode-line
   :pre-load (setq sml/no-confirm-load-theme t)
