@@ -223,11 +223,9 @@ buffers."
     :diminish eldoc-mode
     :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
   (use-package rainbow-delimiters
-    :commands rainbow-delimiters-mode
+    :commands rainbow-turn-on
     :init
-    (defun turn-on-rainbow-delimiters-mode ()
-      (rainbow-delimiters-mode t))
-    (add-hook 'emacs-lisp-mode-hook 'turn-on-rainbow-delimiters-mode))
+    (add-hook 'emacs-lisp-mode-hook 'rainbow-turn-on))
   (use-package highlight-parentheses
     :commands highlight-parentheses-mode
     :init
