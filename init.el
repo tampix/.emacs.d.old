@@ -12,6 +12,8 @@
 
 (line-number-mode t)
 (column-number-mode t)
+(global-hl-line-mode t)
+(set-face-background hl-line-face "gray5")
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
