@@ -299,6 +299,9 @@ buffers."
   (use-package erc-hl-nicks
     :init (erc-hl-nicks-enable))
 
+  (setq erc-query-display 'buffer
+	erc-auto-query 'frame)
+
   (defun bitlbee-identify ()
     "If we're on the bitlbee server, send the identify command to the
  &bitlbee channel."
