@@ -378,28 +378,6 @@ buffers."
   :config
   (evil-mode t)
 
-  (defun my-client-frame-list ()
-    "List frames for current emacsclient."
-    (--filter (eq (frame-parameter it 'client)
-		  (frame-parameter (selected-frame) 'client))
-	      (frame-list)))
-  (evil-define-command evil-quit (&optional bang)
-    "Closes the current window, current frame, Emacs.
-If the current frame is the only one that belongs to some client the
-client connection is closed."
-    :repeat nil
-    (interactive "<!>")
-    (condition-case nil
-	(delete-window)
-      (error
-       (condition-case nil
-	   (let ((proc (frame-parameter (selected-frame) 'client)))
-	     (if (and proc (= 1 (length (my-client-frame-list))))
-		 (evil-quit-all bang)
-	       (delete-frame)))
-	 (error
-	  (evil-quit-all bang))))))
-
   (use-package evil-visualstar)
   (use-package evil-jumper)
   (use-package evil-surround
@@ -506,4 +484,23 @@ client connection is closed."
     (evil-normal-state)
     (narrow-to-region-indirect beg end))
   (define-key evil-normal-state-map (kbd ", n") 'evil-narrow-indirect)
-  (define-key evil-visual-state-map (kbd ", n") 'evil-narrow-indirect))
+  (define-key evil-visual-state-map (kbd ", n") 'evil-narrow-indirect)
+
+  ;; See https://bitbucket.org/lyro/evil/issue/430/evil-quit-should-not-always-kill-a-client
+  (evil-define-command fifr/evil-quit-client (force)
+    "Closes the current window, exits Emacs if this is the last window."
+    :repeat nil
+    (interactive "<!>")
+    (condition-case nil
+	(delete-window)
+      (error
+       (if (and (boundp 'server-buffer-clients) server-buffer-clients)
+	   (server-edit)
+	 (condition-case nil
+	     (delete-frame)
+	   (error
+	    (if force
+		(kill-emacs)
+	      (save-buffers-kill-emacs))))))))
+
+  (evil-ex-define-cmd "quit" #'fifr/evil-quit-client))
