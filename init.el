@@ -258,6 +258,7 @@ buffers."
 	ag-reuse-window t))
 
 (use-package yasnippet
+  :diminish (yas-minor-mode)
   :commands yas-global-mode
   :idle (yas-global-mode t)
   :init
