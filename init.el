@@ -257,6 +257,13 @@ buffers."
   (setq ag-reuse-buffers t
 	ag-reuse-window t))
 
+(use-package yasnippet
+  :commands yas-global-mode
+  :idle (yas-global-mode t)
+  :init
+  (setq yas-verbosity 1
+	yas-prompt-functions '(yas-completing-prompt yas-ido-prompt)))
+
 (use-package company
   :diminish company-mode
   :commands global-company-mode
@@ -264,6 +271,7 @@ buffers."
   :config
   (setq company-transformers '(company-sort-by-occurrence)
 	company-require-match t)
+  (add-to-list 'company-backends 'company-yasnippet)
   ;; key mapping
   (define-key company-active-map (kbd "\C-n") 'company-select-next)
   (define-key company-active-map (kbd "\C-p") 'company-select-previous)
