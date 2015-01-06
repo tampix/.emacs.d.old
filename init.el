@@ -286,19 +286,40 @@ buffers."
   (add-hook 'html-mode-hook 'rainbow-turn-on)
   (add-hook 'emacs-lisp-mode-hook 'rainbow-turn-on))
 
+(use-package eshell
+  :commands eshell
+  :init
+  (defun eshell-mode-hook-func ()
+    (setq eshell-path-env (concat "/usr/local/bin:" eshell-path-env))
+    (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
+    (setenv "TERM" "dumb"))
+
+  (add-hook 'eshell-mode-hook 'eshell-mode-hook-func))
+
 (use-package sauron
   :commands sauron-start-hidden
   :config
   (setq sauron-modules '(sauron-erc
 			 sauron-notifications))
 
+  (defun my-notify (msg sender timestamp)
+    "Notify using libnotify."
+    (sauron-fx-notify (format "%s [%s]" sender timestamp) msg 6000))
+
+  (use-package terminal-notifier
+    :if (eq system-type 'darwin)
+    :init
+    (defun my-notify (msg sender timestamp)
+      "Notify using terminal-notifier."
+      (tn-notify msg (format "%s [%s]" sender timestamp))))
+
   (defun my-sauron-event-handler (origin prio msg &optional props)
-    "Use libnotify for incomming priv msg."
+    "Notify incomming priv msg."
     (if (eq origin 'erc)
 	(let*
 	    ((sender (plist-get props :sender))
 	     (timestamp (format-time-string "%X")))
-	  (sauron-fx-notify (format "%s [%s]" sender timestamp) msg 6000))))
+	  (my-notify msg sender timestamp))))
 
   (add-hook 'sauron-event-added-functions 'my-sauron-event-handler))
 

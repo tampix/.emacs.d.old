@@ -1,0 +1,3 @@
+[submodule "lisp/terminal-notifier"]
+	path = lisp/terminal-notifier
+	url = https://github.com/emacsmirror/terminal-notifier
