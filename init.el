@@ -292,6 +292,9 @@ buffers."
   (defun eshell-mode-hook-func ()
     (setq eshell-path-env (concat "/usr/local/bin:" eshell-path-env))
     (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
+    (setenv "LANG" "en_US.UTF-8")
+    (setenv "LC_ALL" "en_US.UTF-8")
+    (setenv "LC_CTYPE" "en_US.UTF-8")
     (setenv "TERM" "dumb"))
 
   (add-hook 'eshell-mode-hook 'eshell-mode-hook-func))
