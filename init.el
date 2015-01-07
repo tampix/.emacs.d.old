@@ -401,6 +401,9 @@ buffers."
   (sp-local-pair '(emacs-lisp-mode org-mode git-commit-mode) "`" "'")
   (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil))
 
+(use-package winner
+  :init (winner-mode t))
+
 (use-package evil
   :pre-load
   (setq evil-want-C-u-scroll t
@@ -446,6 +449,8 @@ buffers."
   ;; normal-mode shortcuts
   (define-key evil-normal-state-map (kbd "+") 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map (kbd "-") 'evil-numbers/dec-at-pt)
+  ;; restore previous window layout
+  (define-key evil-normal-state-map (kbd "C-w u") 'winner-undo)
   ;; ex-mode shortcuts
   (define-key evil-ex-map "e " 'ido-find-file)
   (define-key evil-ex-map "b " 'ido-switch-buffer)
