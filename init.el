@@ -169,6 +169,41 @@ buffers."
   (use-package magit-blame
     :commands  magit-blame-mode)
   :config
+  (defun magit-push-dwis (arg)
+    "Like `magit-push-dwim' but doesn't mess with setting upstream
+branches or push to branch.<name>.merge by default. The goal here is
+to respect the config push.default. If push.default=current you really
+want to push to the remote branch of the same name as the local
+branch, even if your upstream (i.e. branch.<name>.merge) is set to
+something else."
+    (interactive "P")
+    (let* ((branch (or (magit-get-current-branch)
+		       (user-error "Don't push a detached head. That's gross")))
+	   (auto-remote (magit-get-remote branch))
+	   (used-remote (if (or arg (not auto-remote))
+			    (magit-read-remote
+			     (format "Push %s to remote" branch) auto-remote)
+			  auto-remote))
+	   (used-branch (when (>= (prefix-numeric-value arg) 16)
+			  (magit-read-remote-branch
+			   (format "Push %s as branch" branch)
+			   used-remote))))
+      (magit-run-git-async
+       "push" "-v" used-remote
+       (if used-branch (format "%s:%s" branch used-branch) branch)
+       magit-custom-options)))
+
+  (defun magit-push-gerrit (arg)
+    "Use magit-push-dwis if using gerrit."
+    (if (string-match "gerrit"
+		      (magit-get "remote" (magit-get-current-remote) "url"))
+	(if (y-or-n-p "Push to gerrit?")
+	    (magit-push-dwis arg)
+	  (nil))
+      (magit-push-dwim arg)))
+
+  (setq magit-push-hook 'magit-push-gerrit)
+
   (setq magit-status-buffer-switch-function 'switch-to-buffer))
 
 (use-package ido
