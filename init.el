@@ -18,6 +18,7 @@
 (setq-default major-mode 'text-mode)
 
 (setq redisplay-dont-pause t
+      ring-bell-function #'ignore
       require-final-newline t
       scroll-step 1
       scroll-conservatively 10000
