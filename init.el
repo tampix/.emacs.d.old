@@ -17,6 +17,14 @@
 
 (setq-default major-mode 'text-mode)
 
+(if (eq system-type 'darwin)
+    (progn 
+      (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
+      (setenv "LANG" "en_US.UTF-8")
+      (setenv "LC_ALL" "en_US.UTF-8")
+      (setenv "LC_CTYPE" "en_US.UTF-8")
+      (setenv "TERM" "dumb")))
+
 (setq redisplay-dont-pause t
       ring-bell-function #'ignore
       require-final-newline t
@@ -326,12 +334,7 @@ something else."
   :commands eshell
   :init
   (defun eshell-mode-hook-func ()
-    (setq eshell-path-env (concat "/usr/local/bin:" eshell-path-env))
-    (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
-    (setenv "LANG" "en_US.UTF-8")
-    (setenv "LC_ALL" "en_US.UTF-8")
-    (setenv "LC_CTYPE" "en_US.UTF-8")
-    (setenv "TERM" "dumb"))
+    (setq eshell-path-env (concat "/usr/local/bin:" eshell-path-env)))
 
   (add-hook 'eshell-mode-hook 'eshell-mode-hook-func))
 
