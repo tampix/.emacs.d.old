@@ -171,7 +171,8 @@ buffers."
 
 (use-package magit
   :diminish magit-auto-revert-mode
-  :commands (magit-status
+  :commands (magit-status-internal
+	     magit-status
 	     magit-diff
 	     magit-log)
   :init
@@ -268,9 +269,9 @@ something else."
     :diminish eldoc-mode
     :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
   (use-package rainbow-delimiters
-    :commands rainbow-turn-on
+    :commands rainbow-delimiters-mode-enable
     :init
-    (add-hook 'emacs-lisp-mode-hook 'rainbow-turn-on))
+    (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode-enable))
   (use-package highlight-parentheses
     :commands highlight-parentheses-mode
     :init
@@ -320,7 +321,8 @@ something else."
   (define-key company-active-map (kbd "\C-n") 'company-select-next)
   (define-key company-active-map (kbd "\C-p") 'company-select-previous)
   (define-key company-active-map (kbd "\C-d") 'company-show-doc-buffer)
-  (define-key company-active-map (kbd "<tab>") 'company-complete))
+  (define-key company-active-map (kbd "<tab>") 'company-complete)
+  (define-key company-active-map (kbd "<enter>") 'company-complete))
 
 (use-package rainbow-mode
   :commands rainbow-turn-on
@@ -485,6 +487,8 @@ something else."
      (define-key evil-normal-state-map k (lookup-key evil-motion-state-map k))
      (define-key evil-motion-state-map k nil))
    (list (kbd "RET") " "))
+  ;; company-yasnippet binding
+  (define-key evil-insert-state-map (kbd "<tab>") 'company-yasnippet)
   ;; normal-mode shortcuts
   (define-key evil-normal-state-map (kbd "+") 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map (kbd "-") 'evil-numbers/dec-at-pt)
