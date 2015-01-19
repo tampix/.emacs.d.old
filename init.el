@@ -316,7 +316,6 @@ something else."
   :config
   (setq company-transformers '(company-sort-by-occurrence)
 	company-require-match t)
-  (add-to-list 'company-backends 'company-yasnippet)
   ;; key mapping
   (define-key company-active-map (kbd "\C-n") 'company-select-next)
   (define-key company-active-map (kbd "\C-p") 'company-select-previous)
