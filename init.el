@@ -492,6 +492,8 @@ something else."
   ;; normal-mode shortcuts
   (define-key evil-normal-state-map (kbd "+") 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map (kbd "-") 'evil-numbers/dec-at-pt)
+  (define-key evil-normal-state-map (kbd "\M-n") 'company-select-next)
+  (define-key evil-normal-state-map (kbd "\M-p") 'company-select-previous)
   ;; restore previous window layout
   (define-key evil-normal-state-map (kbd "C-w u") 'winner-undo)
   ;; ex-mode shortcuts
