@@ -488,7 +488,7 @@ something else."
      (define-key evil-motion-state-map k nil))
    (list (kbd "RET") " "))
   ;; company-yasnippet binding
-  (define-key evil-insert-state-map (kbd "<tab>") 'company-yasnippet)
+  (define-key evil-insert-state-map (kbd "S-<tab>") 'company-yasnippet)
   ;; normal-mode shortcuts
   (define-key evil-normal-state-map (kbd "+") 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map (kbd "-") 'evil-numbers/dec-at-pt)
