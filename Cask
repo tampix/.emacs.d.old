@@ -37,4 +37,5 @@
 (depends-on "sublime-themes")
 (depends-on "use-package")
 (depends-on "volatile-highlights")
+(depends-on "web-mode")
 (depends-on "yasnippet")

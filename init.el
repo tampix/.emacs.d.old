@@ -144,6 +144,9 @@ buffers."
   (add-hook 'nxml-mode-hook 'my-nxml-indent-hook)
   :mode ("\\.tml$" . nxml-mode))
 
+(use-package web-mode
+  :mode ("\\.handlebars$" . web-mode))
+
 (use-package abbrev
   :diminish abbrev-mode)
 
