@@ -79,8 +79,9 @@ indirectly."
   (set-face-foreground hl-line-face nil))
 
 (use-package smart-mode-line
-  :pre-load (setq sml/no-confirm-load-theme t)
-  :init (sml/setup)
+  :init
+  (setq sml/no-confirm-load-theme t)
+  (sml/setup)
   :config
   (set-face-attribute 'mode-line nil
 		      :foreground "gray40"
@@ -161,7 +162,8 @@ buffers."
   (use-package git-gutter-fringe+
     :diminish git-gutter+-mode
     :commands global-git-gutter+-mode
-    :idle (global-git-gutter+-mode t)
+    :defer
+    :init (global-git-gutter+-mode t)
     :config
     (git-gutter-fr+-minimal))
   ;; Tapestry settings
@@ -256,6 +258,7 @@ something else."
     :init (smex-initialize)
     :bind ("M-x" . smex)))
 
+;; TODO ee `split-window-preferred-function'
 (use-package help-mode
   :init
   (defadvice help-button-action (around help-button-action-reuse-window activate)
@@ -308,16 +311,18 @@ something else."
 (use-package yasnippet
   :diminish (yas-minor-mode)
   :commands yas-global-mode
-  :idle (yas-global-mode t)
+  :defer
   :init
+  (yas-global-mode t)
   (setq yas-verbosity 1
 	yas-prompt-functions '(yas-completing-prompt yas-ido-prompt)))
 
 (use-package company
   :diminish company-mode
   :commands global-company-mode
-  :idle (global-company-mode t)
+  :defer
   :config
+  (global-company-mode t)
   (setq company-transformers '(company-sort-by-occurrence)
 	company-require-match t)
   ;; key mapping
@@ -437,8 +442,9 @@ something else."
 (use-package smartparens
   :diminish smartparens-mode
   :commands smartparens-global-mode
-  :idle (smartparens-global-mode t)
+  :defer
   :config
+  (smartparens-global-mode t)
   (add-hook 'erc-mode-hook 'turn-off-smartparens-mode)
   (sp-pair "'" nil :unless '(sp-point-after-word-p))
   (sp-local-pair '(emacs-lisp-mode org-mode git-commit-mode) "`" "'")
@@ -448,7 +454,7 @@ something else."
   :init (winner-mode t))
 
 (use-package evil
-  :pre-load
+  :init
   (setq evil-want-C-u-scroll t
 	evil-want-C-i-jump t
 	evil-want-C-w-in-emacs-state t
@@ -462,7 +468,9 @@ something else."
     :init (evil-jumper-mode t))
   (use-package evil-surround
     :commands global-evil-surround-mode
-    :idle (global-evil-surround-mode t)
+    :defer
+    :init
+    (global-evil-surround-mode t)
     :config
     (setq-default surround-pairs-alist
 		  '((?\( . ("(" . ")"))
