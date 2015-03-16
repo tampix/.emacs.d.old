@@ -219,7 +219,8 @@ something else."
 
   (setq magit-push-hook 'magit-push-gerrit)
 
-  (setq magit-status-buffer-switch-function 'switch-to-buffer))
+  (setq magit-status-buffer-switch-function 'switch-to-buffer)
+  (setq magit-completing-read-function 'ido-completing-read))
 
 (use-package ido
   :commands (ido-find-file
