@@ -162,7 +162,7 @@ buffers."
   (use-package git-gutter-fringe+
     :diminish git-gutter+-mode
     :commands global-git-gutter+-mode
-    :defer
+    :defer t
     :init (global-git-gutter+-mode t)
     :config
     (git-gutter-fr+-minimal))
@@ -312,7 +312,7 @@ something else."
 (use-package yasnippet
   :diminish (yas-minor-mode)
   :commands yas-global-mode
-  :defer
+  :defer t
   :init
   (yas-global-mode t)
   (setq yas-verbosity 1
@@ -321,7 +321,7 @@ something else."
 (use-package company
   :diminish company-mode
   :commands global-company-mode
-  :defer
+  :defer t
   :config
   (global-company-mode t)
   (setq company-transformers '(company-sort-by-occurrence)
@@ -443,7 +443,7 @@ something else."
 (use-package smartparens
   :diminish smartparens-mode
   :commands smartparens-global-mode
-  :defer
+  :defer t
   :config
   (smartparens-global-mode t)
   (add-hook 'erc-mode-hook 'turn-off-smartparens-mode)
@@ -469,7 +469,7 @@ something else."
     :init (evil-jumper-mode t))
   (use-package evil-surround
     :commands global-evil-surround-mode
-    :defer
+    :defer t
     :init
     (global-evil-surround-mode t)
     :config
@@ -493,36 +493,50 @@ something else."
     "K" 'magit-discard-item
     "l" 'magit-key-mode-popup-logging
     "h" 'magit-diff-toggle-refine-hunk)
+
+  (defsubst evil-map (mode key cmd)
+    (define-key mode key cmd))
+  (defsubst evil-nmap (key cmd)
+    (evil-map evil-normal-state-map key cmd))
+  (defsubst evil-mmap (key cmd)
+    (evil-map evil-motion-state-map key cmd))
+  (defsubst evil-vmap (key cmd)
+    (evil-map evil-visual-state-map key cmd))
+  (defsubst evil-imap (key cmd)
+    (evil-map evil-insert-state-map key cmd))
+  (defsubst evil-cmap (key cmd)
+    (evil-map evil-ex-map key cmd))
+
   ;; move RET and SPC from motion state to normal state
   (mapcar
    (lambda (k)
-     (define-key evil-normal-state-map k (lookup-key evil-motion-state-map k))
-     (define-key evil-motion-state-map k nil))
+     (evil-nmap k (lookup-key evil-motion-state-map k))
+     (evil-mmap k nil))
    (list (kbd "RET") " "))
   ;; company-yasnippet binding
-  (define-key evil-insert-state-map (kbd "S-<tab>") 'company-yasnippet)
+  (evil-imap (kbd "S-<tab>") 'company-yasnippet)
   ;; normal-mode shortcuts
-  (define-key evil-normal-state-map (kbd "+") 'evil-numbers/inc-at-pt)
-  (define-key evil-normal-state-map (kbd "-") 'evil-numbers/dec-at-pt)
-  (define-key evil-normal-state-map (kbd "\M-n") 'company-select-next)
-  (define-key evil-normal-state-map (kbd "\M-p") 'company-select-previous)
+  (evil-nmap (kbd "+") 'evil-numbers/inc-at-pt)
+  (evil-nmap (kbd "-") 'evil-numbers/dec-at-pt)
+  (evil-nmap (kbd "\M-n") 'company-select-next)
+  (evil-nmap (kbd "\M-p") 'company-select-previous)
   ;; restore previous window layout
-  (define-key evil-normal-state-map (kbd "C-w u") 'winner-undo)
+  (evil-nmap (kbd "C-w u") 'winner-undo)
   ;; ex-mode shortcuts
-  (define-key evil-ex-map "e " 'ido-find-file)
-  (define-key evil-ex-map "b " 'ido-switch-buffer)
-  (define-key evil-ex-map "pf " 'projectile-find-file)
-  (define-key evil-ex-map "ps " 'projectile-switch-project)
-  (define-key evil-ex-map "pa " 'projectile-ag)
-  (define-key evil-ex-map "pb " 'projectile-switch-to-buffer)
-  (define-key evil-ex-map "po " 'projectile-find-other-file)
-  (define-key evil-ex-map "ee " 'my-erc-bitlbee-query)
-  (define-key evil-ex-map "eb " 'my-erc-switch-buffer)
+  (evil-cmap "e " 'ido-find-file)
+  (evil-cmap "b " 'ido-switch-buffer)
+  (evil-cmap "pf " 'projectile-find-file)
+  (evil-cmap "ps " 'projectile-switch-project)
+  (evil-cmap "pa " 'projectile-ag)
+  (evil-cmap "pb " 'projectile-switch-to-buffer)
+  (evil-cmap "po " 'projectile-find-other-file)
+  (evil-cmap "ee " 'my-erc-bitlbee-query)
+  (evil-cmap "eb " 'my-erc-switch-buffer)
   ;; Vim-ism ;]
-  (define-key evil-normal-state-map "Y" (kbd "y$"))
+  (evil-nmap "Y" (kbd "y$"))
   ;; ESC exit from anywhere
-  (define-key evil-normal-state-map [escape] 'keyboard-quit)
-  (define-key evil-visual-state-map [escape] 'keyboard-quit)
+  (evil-nmap [escape] 'keyboard-quit)
+  (evil-vmap [escape] 'keyboard-quit)
   (define-key minibuffer-local-map [escape] 'abort-recursive-edit)
   (define-key minibuffer-local-ns-map [escape] 'abort-recursive-edit)
   (define-key minibuffer-local-completion-map [escape] 'abort-recursive-edit)
@@ -534,9 +548,9 @@ something else."
     "ace-jump-word-mode without having to imput the head char."
     (let ((ace-jump-word-mode-use-query-char nil))
       (evil-ace-jump-word-mode count)))
-  (define-key evil-normal-state-map (kbd "SPC") 'evil-ace-jump-char-mode)
-  (define-key evil-normal-state-map (kbd "S-SPC") 'evil-ace-jump-word-mode)
-  (define-key evil-normal-state-map (kbd "C-SPC") 'evil-ace-jump-word-no-prefix-mode)
+  (evil-nmap (kbd "SPC") 'evil-ace-jump-char-mode)
+  (evil-nmap (kbd "S-SPC") 'evil-ace-jump-word-mode)
+  (evil-nmap (kbd "C-SPC") 'evil-ace-jump-word-no-prefix-mode)
 
   ;; Evil smartparens motions
   (evil-define-motion evil-sp-forward-sexp (count)
@@ -559,10 +573,10 @@ something else."
     (let*
 	((evil-move-cursor-back nil))
       (sp-down-sexp count)))
-  (define-key evil-normal-state-map (kbd "[ x") 'evil-sp-backward-sexp)
-  (define-key evil-normal-state-map (kbd "] x") 'evil-sp-forward-sexp)
-  (define-key evil-normal-state-map (kbd "[ X") 'evil-sp-up-sexp)
-  (define-key evil-normal-state-map (kbd "] X") 'evil-sp-down-sexp)
+  (evil-nmap (kbd "[ x") 'evil-sp-backward-sexp)
+  (evil-nmap (kbd "] x") 'evil-sp-forward-sexp)
+  (evil-nmap (kbd "[ X") 'evil-sp-up-sexp)
+  (evil-nmap (kbd "] X") 'evil-sp-down-sexp)
 
   ;; Evil smartparens text objects
   (evil-define-text-object evil-a-sexp (count &optional beg end type)
@@ -578,5 +592,5 @@ something else."
     (interactive "<R>")
     (evil-normal-state)
     (narrow-to-region-indirect beg end))
-  (define-key evil-normal-state-map (kbd ", n") 'evil-narrow-indirect)
-  (define-key evil-visual-state-map (kbd ", n") 'evil-narrow-indirect))
+  (evil-nmap (kbd ", n") 'evil-narrow-indirect)
+  (evil-vmap (kbd ", n") 'evil-narrow-indirect))
