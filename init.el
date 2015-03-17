@@ -33,6 +33,8 @@
       inhibit-default-init t
       inhibit-startup-screen t
       confirm-nonexistent-file-or-buffer nil
+      backup-directory-alist `((".*" . ,temporary-file-directory))
+      auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
       custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
