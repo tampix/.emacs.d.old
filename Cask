@@ -12,6 +12,7 @@
 (depends-on "evil-jumper")
 (depends-on "evil-surround")
 (depends-on "evil-visualstar")
+(depends-on "exec-path-from-shell")
 (depends-on "flx-ido")
 (depends-on "git-gutter-fringe+")
 (depends-on "git-timemachine")

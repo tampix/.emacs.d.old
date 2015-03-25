@@ -17,14 +17,6 @@
 
 (setq-default major-mode 'text-mode)
 
-(if (eq system-type 'darwin)
-    (progn 
-      (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
-      (setenv "LANG" "en_US.UTF-8")
-      (setenv "LC_ALL" "en_US.UTF-8")
-      (setenv "LC_CTYPE" "en_US.UTF-8")
-      (setenv "TERM" "dumb")))
-
 (setq redisplay-dont-pause t
       ring-bell-function #'ignore
       require-final-newline t
@@ -44,6 +36,7 @@
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
 (require 'pallet)
+(pallet-mode t)
 
 (put 'narrow-to-region 'disabled nil)
 
@@ -79,6 +72,11 @@ indirectly."
   :config
   (set-face-background hl-line-face "gray5")
   (set-face-foreground hl-line-face nil))
+
+(use-package exec-path-from-shell
+  :if (eq system-type 'darwin)
+  :init
+  (exec-path-from-shell-initialize))
 
 (use-package smart-mode-line
   :init
