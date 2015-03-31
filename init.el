@@ -104,6 +104,11 @@ indirectly."
   :diminish highlight-quoted-mode
   :init (highlight-quoted-mode t))
 
+(use-package yascroll
+  :defer t
+  :config
+  (global-yascroll-bar-mode t))
+
 (use-package org
   :commands org-mode
   :config
@@ -311,7 +316,6 @@ something else."
 
 (use-package yasnippet
   :diminish (yas-minor-mode)
-  :commands yas-global-mode
   :defer t
   :init
   (yas-global-mode t)
@@ -320,10 +324,9 @@ something else."
 
 (use-package company
   :diminish company-mode
-  :commands global-company-mode
   :defer t
+  :init (global-company-mode t)
   :config
-  (global-company-mode t)
   (setq company-transformers '(company-sort-by-occurrence)
 	company-require-match t)
   ;; key mapping
@@ -464,7 +467,8 @@ something else."
   :config
   (evil-mode t)
 
-  (use-package evil-visualstar)
+  (use-package evil-visualstar
+    :init (global-evil-visualstar-mode t))
   (use-package evil-jumper
     :init (evil-jumper-mode t))
   (use-package evil-surround
