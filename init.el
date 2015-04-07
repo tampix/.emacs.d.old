@@ -17,7 +17,8 @@
 
 (setq-default major-mode 'text-mode)
 
-(setq redisplay-dont-pause t
+(setq gc-cons-threshold 20000000
+      redisplay-dont-pause t
       ring-bell-function #'ignore
       require-final-newline t
       scroll-step 1
