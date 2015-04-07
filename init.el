@@ -17,7 +17,7 @@
 
 (setq-default major-mode 'text-mode)
 
-(setq gc-cons-threshold 20000000
+(setq gc-cons-threshold 20000000 ;; Fix perf issues
       redisplay-dont-pause t
       ring-bell-function #'ignore
       require-final-newline t
@@ -599,3 +599,4 @@ something else."
     (narrow-to-region-indirect beg end))
   (evil-nmap (kbd ", n") 'evil-narrow-indirect)
   (evil-vmap (kbd ", n") 'evil-narrow-indirect))
+
