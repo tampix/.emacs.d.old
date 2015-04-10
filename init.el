@@ -228,6 +228,13 @@ something else."
   (setq magit-status-buffer-switch-function 'switch-to-buffer)
   (setq magit-completing-read-function 'ido-completing-read))
 
+(use-package git-timemachine
+  :commands git-timemachine
+  :config
+  (evil-make-overriding-map git-timemachine-mode-map 'normal)
+  ;; force update evil keymaps after git-timemachine-mode loaded
+  (add-hook 'git-timemachine-mode-hook #'evil-normalize-keymaps))
+
 (use-package ido
   :commands (ido-find-file
 	     ido-switch-buffer)
