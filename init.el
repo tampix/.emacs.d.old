@@ -212,15 +212,14 @@ something else."
   ;; force update evil keymaps after git-timemachine-mode loaded
   (add-hook 'git-timemachine-mode-hook #'evil-normalize-keymaps))
 
-;; TODO `split-window-preferred-function'
 (use-package help-mode
   :init
-  (defadvice help-button-action (around help-button-action-reuse-window activate)
+  (defun my-help-button-action-advice (orig-fun &rest args)
     "Reuse current window when following links."
-    ;; prevent changing the window
-    (flet ((pop-to-buffer (buffer &rest args)
-			  (switch-to-buffer buffer)))
-      ad-do-it)))
+    (cl-letf (((symbol-function 'pop-to-buffer)
+	       'switch-to-buffer))
+      (apply orig-fun args)))
+  (advice-add 'help-button-action :around 'my-help-button-action-advice))
 
 (use-package emacs-lisp-mode
   :init
