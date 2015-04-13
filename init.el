@@ -1,9 +1,3 @@
-(defun my-show-startup-time ()
-  "Show Emacs's startup time in the minibuffer"
-  (message "Startup time: %s seconds."
-           (emacs-uptime "%s")))
-(add-hook 'emacs-startup-hook 'my-show-startup-time 'append)
-
 (mapc
  (lambda (mode)
    (when (fboundp mode)
@@ -95,7 +89,7 @@ indirectly."
 
 (use-package volatile-highlights
   :diminish volatile-highlights-mode
-  :init (volatile-highlights-mode t))
+  :config (volatile-highlights-mode t))
 
 (use-package highlight-numbers
   :diminish highlight-numbers-mode
@@ -133,24 +127,6 @@ indirectly."
 		    tab-width 4
 		    indent-tabs-mode t))))
 
-(use-package nxml-mode
-  :defer t
-  :config
-  (fset 'html-mode 'nxml-mode)
-  (setq nxml-slash-auto-complete-flag t)
-
-  (defadvice nxml-cleanup (around nxml-cleanup-no-widen activate)
-    "Avoid the use of widen in nxml-cleanup which defeats the purpose of indirect
-buffers."
-    (flet ((widen () (ignore)))
-      ad-do-it))
-
-  (defun my-nxml-indent-hook ()
-    "Indent with spaces instead of tabs"
-    (setq indent-tabs-mode nil))
-  (add-hook 'nxml-mode-hook 'my-nxml-indent-hook)
-  :mode ("\\.tml$" . nxml-mode))
-
 (use-package web-mode
   :mode ("\\.handlebars$" . web-mode))
 
@@ -177,7 +153,7 @@ buffers."
   (add-to-list 'projectile-other-file-alist (list ".tml" ".java"))
 
   (setq projectile-enable-caching t
-	projectile-completion-system 'ido
+	projectile-completion-system 'helm
 	projectile-switch-project-action 'projectile-vc))
 
 (use-package magit
@@ -187,6 +163,7 @@ buffers."
 	     magit-diff
 	     magit-log)
   :init
+  (setq magit-last-seen-setup-instructions "1.4.0")
   (use-package magit-blame
     :commands  magit-blame-mode)
   :config
@@ -226,7 +203,7 @@ something else."
   (setq magit-push-hook 'magit-push-gerrit)
 
   (setq magit-status-buffer-switch-function 'switch-to-buffer)
-  (setq magit-completing-read-function 'ido-completing-read))
+  (setq magit-completing-read-function 'helm--completing-read-default))
 
 (use-package git-timemachine
   :commands git-timemachine
@@ -235,44 +212,7 @@ something else."
   ;; force update evil keymaps after git-timemachine-mode loaded
   (add-hook 'git-timemachine-mode-hook #'evil-normalize-keymaps))
 
-(use-package ido
-  :commands (ido-find-file
-	     ido-switch-buffer)
-  :init
-  (ido-mode t)
-  (setq ido-everywhere t
-	ido-create-new-buffer 'always
-	ido-default-buffer-method 'selected-window)
-  (use-package ido-other-window
-    :config
-    (defun my-ido-split-keys ()
-      "Add my keybindings to enable window splitting with ido."
-      (mapcar
-       (lambda (map)
-	 (define-key map (kbd "<C-return>") 'ido-exit-minibuffer)
-	 (define-key map (kbd "C-o") 'ido-invoke-in-other-window)
-	 (define-key map (kbd "C-h") 'ido-invoke-in-vertical-split)
-	 (define-key map (kbd "C-v") 'ido-invoke-in-horizontal-split)
-	 (define-key map (kbd "C-t") 'ido-invoke-in-new-frame))
-       (list ido-buffer-completion-map
-	     ido-common-completion-map
-	     ido-file-completion-map
-	     ido-file-dir-completion-map)))
-    (add-hook 'ido-setup-hook 'my-ido-split-keys))
-  (use-package ido-vertical-mode
-    :init (ido-vertical-mode t))
-  (use-package flx-ido
-    :init (flx-ido-mode t)
-    :config (setq ido-use-face nil))
-  (use-package ido-ubiquitous
-    :init (ido-ubiquitous-mode t))
-  (use-package ido-hacks
-    :init (ido-hacks-mode t))
-  (use-package smex
-    :init (smex-initialize)
-    :bind ("M-x" . smex)))
-
-;; TODO ee `split-window-preferred-function'
+;; TODO `split-window-preferred-function'
 (use-package help-mode
   :init
   (defadvice help-button-action (around help-button-action-reuse-window activate)
@@ -310,17 +250,6 @@ something else."
 
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode))
-
-(use-package ag
-  :commands (ag
-	     ag-files
-	     ag-regexp
-	     ag-project
-	     ag-project-files
-	     ag-project-regexp)
-  :config
-  (setq ag-reuse-buffers t
-	ag-reuse-window t))
 
 (use-package yasnippet
   :diminish (yas-minor-mode)
@@ -451,19 +380,35 @@ something else."
   :config
   (setq ace-jump-mode-scope 'window))
 
-(use-package smartparens
-  :diminish smartparens-mode
-  :commands smartparens-global-mode
-  :defer t
-  :config
-  (smartparens-global-mode t)
-  (add-hook 'erc-mode-hook 'turn-off-smartparens-mode)
-  (sp-pair "'" nil :unless '(sp-point-after-word-p))
-  (sp-local-pair '(emacs-lisp-mode org-mode git-commit-mode) "`" "'")
-  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil))
-
 (use-package winner
   :init (winner-mode t))
+
+(use-package helm
+  :init
+  (use-package helm-config)
+  (use-package helm-misc)
+  (use-package helm-projectile)
+  (use-package helm-mode)
+  (use-package helm-match-plugin)
+  (use-package helm-buffers)
+  (use-package helm-files)
+  (use-package helm-locate)
+  (use-package helm-bookmark)
+
+  (setq helm-candidate-number-limit 100
+	helm-idle-delay 0.0
+	helm-input-idle-delay 0.01
+	helm-quick-update t
+	helm-M-x-requires-pattern nil
+	helm-ff-skip-boring-files t
+	helm-bookmark-show-location t
+	helm-buffers-fuzzy-matching t)
+
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+  (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+  :config
+  (helm-mode t))
 
 (use-package evil
   :init
@@ -535,8 +480,8 @@ something else."
   ;; restore previous window layout
   (evil-nmap (kbd "C-w u") 'winner-undo)
   ;; ex-mode shortcuts
-  (evil-cmap "e " 'ido-find-file)
-  (evil-cmap "b " 'ido-switch-buffer)
+  (evil-cmap "e " 'helm-find-files)
+  (evil-cmap "b " 'helm-buffers-list)
   (evil-cmap "pf " 'projectile-find-file)
   (evil-cmap "ps " 'projectile-switch-project)
   (evil-cmap "pa " 'projectile-ag)
@@ -563,40 +508,6 @@ something else."
   (evil-nmap (kbd "SPC") 'evil-ace-jump-char-mode)
   (evil-nmap (kbd "S-SPC") 'evil-ace-jump-word-mode)
   (evil-nmap (kbd "C-SPC") 'evil-ace-jump-word-no-prefix-mode)
-
-  ;; Evil smartparens motions
-  (evil-define-motion evil-sp-forward-sexp (count)
-    (let*
-	((evil-move-cursor-back nil))
-      (sp-forward-sexp count)))
-  (evil-define-motion evil-sp-backward-sexp (count)
-    (let*
-	((evil-move-cursor-back nil))
-      (sp-backward-sexp count)))
-  (evil-define-motion evil-sp-up-sexp (count)
-    (let*
-	((evil-move-cursor-back nil))
-      (sp-up-sexp count)))
-  (evil-define-motion evil-sp-backward-up-sexp (count)
-    (let*
-	((evil-move-cursor-back nil))
-      (sp-backward-up-sexp count)))
-  (evil-define-motion evil-sp-down-sexp (count)
-    (let*
-	((evil-move-cursor-back nil))
-      (sp-down-sexp count)))
-  (evil-nmap (kbd "[ x") 'evil-sp-backward-sexp)
-  (evil-nmap (kbd "] x") 'evil-sp-forward-sexp)
-  (evil-nmap (kbd "[ X") 'evil-sp-up-sexp)
-  (evil-nmap (kbd "] X") 'evil-sp-down-sexp)
-
-  ;; Evil smartparens text objects
-  (evil-define-text-object evil-a-sexp (count &optional beg end type)
-    (evil-an-object-range count beg end #'sp-forward-sexp #'sp-backward-sexp))
-  (evil-define-text-object evil-inner-sexp (count &optional beg end type)
-    (evil-inner-object-range count beg end #'sp-forward-sexp #'sp-backward-sexp))
-  (define-key evil-outer-text-objects-map "x" 'evil-a-sexp)
-  (define-key evil-inner-text-objects-map "x" 'evil-a-sexp)
 
   ;; Evil narrow-indirect motions
   (evil-define-operator evil-narrow-indirect (beg end type)
