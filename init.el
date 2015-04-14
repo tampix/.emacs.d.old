@@ -100,14 +100,13 @@ indirectly."
   :init (highlight-quoted-mode t))
 
 (use-package yascroll
-  :defer t
-  :config
-  (global-yascroll-bar-mode t))
+  :init
+  (add-hook 'after-init-hook 'global-yascroll-bar-mode t))
 
 (use-package org
-  :commands org-mode
+  :commands (org-mode)
+  :bind ("C-c a" . org-agenda)
   :config
-  (define-key global-map "\C-ca" 'org-agenda)
   (setq org-log-done 'time
 	org-startup-folded nil))
 
@@ -407,7 +406,11 @@ something else."
   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
   (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
   :config
-  (helm-mode t))
+  (helm-mode t)
+
+  (use-package helm-descbinds
+    :bind (("C-h b" . helm-descbinds)
+	   ("C-h w" . helm-descbinds))))
 
 (use-package evil
   :init

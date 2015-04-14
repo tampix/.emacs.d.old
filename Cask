@@ -17,6 +17,7 @@
 (depends-on "helm")
 (depends-on "helm-ag")
 (depends-on "helm-company")
+(depends-on "helm-descbinds")
 (depends-on "helm-projectile")
 (depends-on "highlight-numbers")
 (depends-on "highlight-parentheses")
