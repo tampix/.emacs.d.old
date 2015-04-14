@@ -12,6 +12,7 @@
 (setq-default major-mode 'text-mode)
 
 (setq gc-cons-threshold 20000000 ;; Fix perf issues
+      require-final-newline t
       redisplay-dont-pause t
       ring-bell-function #'ignore
       require-final-newline t
@@ -225,7 +226,7 @@ something else."
   (use-package eldoc
     :commands eldoc-mode
     :diminish eldoc-mode
-    :init (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode))
+    :init (add-hook 'emacs-lisp-mode-hook 'eldoc-mode))
   (use-package rainbow-delimiters
     :commands rainbow-delimiters-mode-enable
     :init
@@ -392,6 +393,12 @@ something else."
   (use-package helm-files)
   (use-package helm-locate)
   (use-package helm-bookmark)
+
+  (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+	helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+	helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+	helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+	helm-ff-file-name-history-use-recentf t)
 
   (setq helm-candidate-number-limit 100
 	helm-idle-delay 0.0
