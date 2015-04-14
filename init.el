@@ -203,7 +203,9 @@ something else."
   (setq magit-push-hook 'magit-push-gerrit)
 
   (setq magit-status-buffer-switch-function 'switch-to-buffer)
-  (setq magit-completing-read-function 'helm--completing-read-default))
+  (setq magit-completing-read-function 'helm--completing-read-default)
+
+  (advice-add 'magit-visit-item :after 'reposition-window))
 
 (use-package git-timemachine
   :commands git-timemachine
