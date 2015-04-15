@@ -142,8 +142,8 @@ indirectly."
 	     projectile-find-file
 	     projectile-switch-project
 	     projectile-switch-to-buffer)
-  ;;:init (projectile-global-mode t)
   :config
+  (projectile-global-mode t)
   (use-package git-gutter-fringe+
     :diminish git-gutter+-mode
     :commands global-git-gutter+-mode
