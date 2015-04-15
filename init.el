@@ -48,14 +48,14 @@ indirectly."
 
 (require 'use-package)
 
-(use-package benchmark-init
-  :init (add-hook 'after-init-hook 'benchmark-init/deactivate))
+(use-package esup
+  :commands esup)
 
 (use-package cl)
 
 (use-package server
   :if (display-graphic-p)
-  :init
+  :config
   (unless (server-running-p)
     (server-start)))
 
@@ -90,19 +90,22 @@ indirectly."
 
 (use-package volatile-highlights
   :diminish volatile-highlights-mode
-  :config (volatile-highlights-mode t))
+  :commands volatile-highlights-mode
+  :init (add-hook 'after-init-hook 'volatile-highlights-mode t))
 
 (use-package highlight-numbers
   :diminish highlight-numbers-mode
-  :init (highlight-numbers-mode t))
+  :commands highlight-numbers-mode
+  :init (add-hook 'after-init-hook 'highlight-numbers-mode t))
 
 (use-package highlight-quoted
   :diminish highlight-quoted-mode
-  :init (highlight-quoted-mode t))
+  :commands highlight-quoted-mode
+  :init (add-hook 'after-init-hook 'highlight-quoted-mode t))
 
 (use-package yascroll
-  :init
-  (add-hook 'after-init-hook 'global-yascroll-bar-mode t))
+  :commands global-yascroll-bar-mode
+  :init (add-hook 'after-init-hook 'global-yascroll-bar-mode t))
 
 (use-package org
   :commands (org-mode)
@@ -139,7 +142,7 @@ indirectly."
 	     projectile-find-file
 	     projectile-switch-project
 	     projectile-switch-to-buffer)
-  :init (projectile-global-mode t)
+  ;;:init (projectile-global-mode t)
   :config
   (use-package git-gutter-fringe+
     :diminish git-gutter+-mode
@@ -254,16 +257,18 @@ something else."
 
 (use-package yasnippet
   :diminish (yas-minor-mode)
-  :defer t
+  :commands yas-global-mode
   :init
-  (yas-global-mode t)
   (setq yas-verbosity 1
-	yas-prompt-functions '(yas-completing-prompt yas-ido-prompt)))
+	yas-prompt-functions '(yas-completing-prompt yas-ido-prompt))
+
+  (add-hook 'after-init-hook 'yas-global-mode t))
 
 (use-package company
   :diminish company-mode
-  :defer t
-  :init (global-company-mode t)
+  :commands global-company-mode
+  :init
+  (add-hook 'after-init-hook 'global-company-mode t)
   :config
   (setq company-transformers '(company-sort-by-occurrence)
 	company-require-match t)
@@ -385,17 +390,8 @@ something else."
   :init (winner-mode t))
 
 (use-package helm
+  :commands helm-mode
   :init
-  (use-package helm-config)
-  (use-package helm-misc)
-  (use-package helm-projectile)
-  (use-package helm-mode)
-  (use-package helm-match-plugin)
-  (use-package helm-buffers)
-  (use-package helm-files)
-  (use-package helm-locate)
-  (use-package helm-bookmark)
-
   (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
 	helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
 	helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
@@ -411,11 +407,21 @@ something else."
 	helm-bookmark-show-location t
 	helm-buffers-fuzzy-matching t)
 
+  (add-hook 'after-init-hook 'helm-mode t)
+  :config
+  (use-package helm-config)
+  (use-package helm-misc)
+  (use-package helm-projectile)
+  (use-package helm-mode)
+  (use-package helm-match-plugin)
+  (use-package helm-buffers)
+  (use-package helm-files)
+  (use-package helm-locate)
+  (use-package helm-bookmark)
+
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
   (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-  :config
-  (helm-mode t)
 
   (use-package helm-descbinds
     :bind (("C-h b" . helm-descbinds)
@@ -428,18 +434,23 @@ something else."
 	evil-want-C-w-in-emacs-state t
 	evil-search-module 'evil-search
 	evil-default-cursor t)
-  :config
-  (evil-mode t)
+
+  (add-hook 'after-init-hook 'evil-mode t)
+
+  (defsubst add-evil-mode-hook (function)
+    "Add FUNCTION to `evil-mode-hook'"
+    (add-hook 'evil-mode-hook function))
 
   (use-package evil-visualstar
-    :init (global-evil-visualstar-mode t))
+    :commands global-evil-visualstar-mode
+    :init (add-evil-mode-hook 'global-evil-visualstar-mode))
   (use-package evil-jumper
-    :init (evil-jumper-mode t))
+    :commands evil-jumper-mode
+    :init (add-evil-mode-hook 'evil-jumper-mode))
   (use-package evil-surround
     :commands global-evil-surround-mode
-    :defer t
     :init
-    (global-evil-surround-mode t)
+    (add-evil-mode-hook 'global-evil-surround-mode)
     :config
     (setq-default surround-pairs-alist
 		  '((?\( . ("(" . ")"))
@@ -455,7 +466,7 @@ something else."
 		    (?t . evil-surround-read-tag)
 		    (?< . evil-surround-read-tag)
 		    (?f . evil-surround-function))))
-
+  :config
   (evil-add-hjkl-bindings magit-status-mode-map 'emacs
     ":" 'evil-ex
     "K" 'magit-discard-item
@@ -528,4 +539,3 @@ something else."
     (narrow-to-region-indirect beg end))
   (evil-nmap (kbd ", n") 'evil-narrow-indirect)
   (evil-vmap (kbd ", n") 'evil-narrow-indirect))
-

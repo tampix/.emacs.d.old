@@ -2,10 +2,10 @@
 (source melpa)
 
 (depends-on "ace-jump-mode")
-(depends-on "benchmark-init")
 (depends-on "company")
 (depends-on "eldoc")
 (depends-on "erc-hl-nicks")
+(depends-on "esup")
 (depends-on "evil")
 (depends-on "evil-jumper")
 (depends-on "evil-surround")
