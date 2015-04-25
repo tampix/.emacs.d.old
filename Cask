@@ -3,6 +3,7 @@
 
 (depends-on "ace-jump-mode")
 (depends-on "company")
+(depends-on "csv-mode")
 (depends-on "eldoc")
 (depends-on "erc-hl-nicks")
 (depends-on "esup")

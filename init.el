@@ -506,7 +506,7 @@ something else."
   (evil-cmap "b " 'helm-buffers-list)
   (evil-cmap "pf " 'projectile-find-file)
   (evil-cmap "ps " 'projectile-switch-project)
-  (evil-cmap "pa " 'projectile-ag)
+  (evil-cmap "pa " 'helm-projectile-ag)
   (evil-cmap "pb " 'projectile-switch-to-buffer)
   (evil-cmap "po " 'projectile-find-other-file)
   (evil-cmap "ee " 'my-erc-bitlbee-query)
@@ -516,11 +516,13 @@ something else."
   ;; ESC exit from anywhere
   (evil-nmap [escape] 'keyboard-quit)
   (evil-vmap [escape] 'keyboard-quit)
-  (define-key minibuffer-local-map [escape] 'abort-recursive-edit)
-  (define-key minibuffer-local-ns-map [escape] 'abort-recursive-edit)
-  (define-key minibuffer-local-completion-map [escape] 'abort-recursive-edit)
-  (define-key minibuffer-local-must-match-map [escape] 'abort-recursive-edit)
-  (define-key minibuffer-local-isearch-map [escape] 'abort-recursive-edit)
+  (define-key minibuffer-local-map [escape] 'keyboard-escape-quit)
+  (define-key minibuffer-local-ns-map [escape] 'keyboard-escape-quit)
+  (define-key minibuffer-local-completion-map [escape] 'keyboard-escape-quit)
+  (define-key minibuffer-local-must-match-map [escape] 'keyboard-escape-quit)
+  (define-key minibuffer-local-isearch-map [escape] 'keyboard-escape-quit)
+  (add-hook 'helm-mode-hook
+	    (lambda () (define-key helm-map [escape] 'helm-keyboard-quit)))
 
   ;; Evil ace-jump motions
   (evil-define-motion evil-ace-jump-word-no-prefix-mode (count)
