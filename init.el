@@ -7,7 +7,7 @@
 (line-number-mode t)
 (column-number-mode t)
 
-(add-to-list 'load-path "~/.emacs.d/lisp/")
+(add-to-list 'load-path (locate-user-emacs-file "lisp/"))
 
 (setq-default major-mode 'text-mode)
 
@@ -23,7 +23,7 @@
       confirm-nonexistent-file-or-buffer nil
       backup-directory-alist `((".*" . ,temporary-file-directory))
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
-      custom-file "~/.emacs.d/custom.el")
+      custom-file (locate-user-emacs-file "custom.el"))
 (load custom-file)
 
 (toggle-truncate-lines t)
@@ -151,9 +151,6 @@ indirectly."
     :init (global-git-gutter+-mode t)
     :config
     (git-gutter-fr+-minimal))
-  ;; Tapestry settings
-  (add-to-list 'projectile-other-file-alist (list ".java" ".tml" "Impl.java"))
-  (add-to-list 'projectile-other-file-alist (list ".tml" ".java"))
 
   (setq projectile-enable-caching t
 	projectile-completion-system 'helm
@@ -526,7 +523,7 @@ something else."
 
   ;; Evil ace-jump motions
   (evil-define-motion evil-ace-jump-word-no-prefix-mode (count)
-    "ace-jump-word-mode without having to imput the head char."
+    "ace-jump-word-mode without having to input the head char."
     (let ((ace-jump-word-mode-use-query-char nil))
       (evil-ace-jump-word-mode count)))
   (evil-nmap (kbd "SPC") 'evil-ace-jump-char-mode)
