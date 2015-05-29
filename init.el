@@ -12,6 +12,7 @@
 (setq-default major-mode 'text-mode)
 
 (setq gc-cons-threshold 20000000 ;; Fix perf issues
+      echo-keystrokes 0.1
       require-final-newline t
       redisplay-dont-pause t
       ring-bell-function #'ignore
