@@ -153,6 +153,7 @@ indirectly."
     :config
     (git-gutter-fr+-minimal))
 
+  (helm-projectile-on)
   (setq projectile-enable-caching t
 	projectile-completion-system 'helm
 	projectile-switch-project-action 'projectile-vc))
@@ -502,11 +503,11 @@ something else."
   ;; ex-mode shortcuts
   (evil-cmap "e " 'helm-find-files)
   (evil-cmap "b " 'helm-buffers-list)
-  (evil-cmap "pf " 'projectile-find-file)
-  (evil-cmap "ps " 'projectile-switch-project)
+  (evil-cmap "pf " 'helm-projectile-find-file)
+  (evil-cmap "ps " 'helm-projectile-switch-project)
   (evil-cmap "pa " 'helm-projectile-ag)
-  (evil-cmap "pb " 'projectile-switch-to-buffer)
-  (evil-cmap "po " 'projectile-find-other-file)
+  (evil-cmap "pb " 'helm-projectile-switch-to-buffer)
+  (evil-cmap "po " 'helm-projectile-find-other-file)
   (evil-cmap "ee " 'my-erc-bitlbee-query)
   (evil-cmap "eb " 'my-erc-switch-buffer)
   ;; Vim-ism ;]
