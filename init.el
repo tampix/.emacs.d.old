@@ -137,6 +137,18 @@ indirectly."
 (use-package abbrev
   :diminish abbrev-mode)
 
+(use-package git-gutter-fringe+
+  :diminish git-gutter+-mode
+  :commands global-git-gutter+-mode
+  :defer t
+  :config
+  (git-gutter-fr+-minimal))
+
+(use-package recentf
+  :commands (recentf-mode)
+  :config
+  (setq recentf-max-saved-items 100))
+
 (use-package projectile
   :diminish (projectile-mode)
   :commands (projectile-global-mode
@@ -145,16 +157,12 @@ indirectly."
 	     projectile-switch-to-buffer)
   :config
   (projectile-global-mode t)
-  (use-package git-gutter-fringe+
-    :diminish git-gutter+-mode
-    :commands global-git-gutter+-mode
-    :defer t
-    :init (global-git-gutter+-mode t)
-    :config
-    (git-gutter-fr+-minimal))
 
+  (global-git-gutter+-mode t)
+  (recentf-mode t)
   (helm-projectile-on)
   (setq projectile-enable-caching t
+	projectile-sort-order 'recentf
 	projectile-completion-system 'helm
 	projectile-switch-project-action 'projectile-vc))
 
@@ -500,6 +508,8 @@ something else."
   (evil-nmap (kbd "\M-p") 'company-select-previous)
   ;; restore previous window layout
   (evil-nmap (kbd "C-w u") 'winner-undo)
+  ;; vnew
+  (evil-nmap (kbd "C-w N") 'evil-window-vnew)
   ;; ex-mode shortcuts
   (evil-cmap "e " 'helm-find-files)
   (evil-cmap "b " 'helm-buffers-list)
