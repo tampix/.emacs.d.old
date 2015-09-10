@@ -2,6 +2,7 @@
 (source melpa)
 
 (depends-on "ace-jump-mode")
+(depends-on "command-log-mode")
 (depends-on "company")
 (depends-on "csv-mode")
 (depends-on "eldoc")

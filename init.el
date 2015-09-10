@@ -70,6 +70,10 @@ indirectly."
   (set-face-background hl-line-face "gray5")
   (set-face-foreground hl-line-face nil))
 
+(use-package command-log-mode
+  :commands (global-command-log-mode
+	     clm/open-command-log-buffer))
+
 (use-package exec-path-from-shell
   :if (eq system-type 'darwin)
   :init
@@ -130,6 +134,12 @@ indirectly."
 	      (setq c-basic-offset 4
 		    tab-width 4
 		    indent-tabs-mode t))))
+
+(use-package nxml-mode
+  :config
+  (add-hook 'nxml-mode-hook
+	    (lambda () (setq nxml-child-indent 8
+			     nxml-attribute-indent 8))))
 
 (use-package web-mode
   :mode ("\\.handlebars$" . web-mode))
