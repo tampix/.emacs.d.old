@@ -11,7 +11,7 @@
 
 (setq-default major-mode 'text-mode)
 
-(setq gc-cons-threshold 20000000 ;; Fix perf issues
+(setq gc-cons-threshold 50000000 ;; Fix perf issues at startup
       echo-keystrokes 0.1
       require-final-newline t
       redisplay-dont-pause t
@@ -26,6 +26,8 @@
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
       custom-file (locate-user-emacs-file "custom.el"))
 (load custom-file)
+
+(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
 
 (toggle-truncate-lines t)
 (fset 'yes-or-no-p 'y-or-n-p)
