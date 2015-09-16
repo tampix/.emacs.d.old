@@ -6,6 +6,7 @@
 
 (line-number-mode t)
 (column-number-mode t)
+(display-battery-mode t)
 
 (add-to-list 'load-path (locate-user-emacs-file "lisp/"))
 
