@@ -13,6 +13,7 @@
 (setq-default major-mode 'text-mode)
 
 (setq gc-cons-threshold 50000000 ;; Fix perf issues at startup
+      jit-lock-stealth-time 3
       echo-keystrokes 0.1
       require-final-newline t
       redisplay-dont-pause t
