@@ -12,6 +12,9 @@
 
 (setq-default major-mode 'text-mode)
 
+(set-fontset-font "fontset-default" nil
+		  (font-spec :size 7 :name "FontAwesome"))
+
 (setq gc-cons-threshold 50000000 ;; Fix perf issues at startup
       jit-lock-stealth-time 3
       echo-keystrokes 0.1
