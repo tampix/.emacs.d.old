@@ -454,11 +454,8 @@ indirectly."
 		    (?< . evil-surround-read-tag)
 		    (?f . evil-surround-function))))
   :config
-  (evil-add-hjkl-bindings magit-status-mode-map 'emacs
-    ":" 'evil-ex
-    "K" 'magit-discard-item
-    "l" 'magit-log-popup
-    "h" 'magit-diff-toggle-refine-hunk)
+  (add-hook 'magit-status-mode-hook
+	    (lambda () (define-key magit-status-mode-map (kbd ":") 'evil-ex)))
 
   (defsubst evil-map (mode key cmd)
     (define-key mode key cmd))
