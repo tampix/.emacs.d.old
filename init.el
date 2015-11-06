@@ -240,7 +240,8 @@ indirectly."
   :mode ("Cask" . emacs-lisp-mode))
 
 (use-package markdown-mode
-  :mode ("README\\.md\\'" . gfm-mode))
+  :mode (("README\\.md\\'" . gfm-mode)
+	 ("\\.apib\\'" . markdown-mode)))
 
 (use-package yasnippet
   :diminish (yas-minor-mode)
