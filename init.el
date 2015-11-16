@@ -148,6 +148,11 @@ indirectly."
 	    (lambda () (setq nxml-child-indent 8
 			     nxml-attribute-indent 8))))
 
+(use-package json-mode
+  :mode ("\\.json$" . json-mode))
+
+(use-package rust-mode)
+
 (use-package web-mode
   :mode ("\\.handlebars$" . web-mode))
 
