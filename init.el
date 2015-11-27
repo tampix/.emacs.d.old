@@ -15,13 +15,12 @@
 (set-fontset-font "fontset-default" nil
 		  (font-spec :size 7 :name "FontAwesome"))
 
-(setq gc-cons-threshold 50000000 ;; Fix perf issues at startup
-      jit-lock-stealth-time 3
-      echo-keystrokes 0.1
+(setq echo-keystrokes 0.1
       require-final-newline t
       redisplay-dont-pause t
       ring-bell-function #'ignore
       require-final-newline t
+      truncate-lines t
       scroll-step 1
       scroll-conservatively 10000
       inhibit-default-init t
@@ -32,6 +31,9 @@
       custom-file (locate-user-emacs-file "custom.el"))
 (load custom-file)
 
+;; Perf
+(setq jit-lock-stealth-time 3)
+(setq gc-cons-threshold 50000000)
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
 
 (toggle-truncate-lines t)
