@@ -31,6 +31,8 @@
       custom-file (locate-user-emacs-file "custom.el"))
 (load custom-file)
 
+(setq-default truncate-lines t)
+
 ;; Perf
 (setq jit-lock-stealth-time 3)
 (setq gc-cons-threshold 50000000)
