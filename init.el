@@ -8,12 +8,9 @@
 (column-number-mode t)
 (display-battery-mode t)
 
-(add-to-list 'load-path (locate-user-emacs-file "lisp/"))
-
 (setq-default major-mode 'text-mode)
 
-(set-fontset-font "fontset-default" nil
-		  (font-spec :size 7 :name "FontAwesome"))
+(setq-default default-input-method "japanese")
 
 (setq echo-keystrokes 0.1
       require-final-newline t
@@ -112,12 +109,17 @@ indirectly."
 (use-package highlight-numbers
   :diminish highlight-numbers-mode
   :commands highlight-numbers-mode
-  :init (add-hook 'after-init-hook 'highlight-numbers-mode t))
+  :init (add-hook 'prog-mode-hook 'highlight-numbers-mode t))
 
 (use-package highlight-quoted
   :diminish highlight-quoted-mode
   :commands highlight-quoted-mode
-  :init (add-hook 'after-init-hook 'highlight-quoted-mode t))
+  :init (add-hook 'emacs-lisp-mode-hook 'highlight-quoted-mode t))
+
+(use-package highlight-escape-sequences
+  :diminish hes-mode
+  :commands hes-mode
+  :init (add-hook 'prog-mode-hook 'hes-mode t))
 
 (use-package yascroll
   :commands global-yascroll-bar-mode
@@ -201,8 +203,19 @@ indirectly."
   (setq magit-last-seen-setup-instructions "1.4.0")
   :config
   (setq magit-push-always-verify nil)
-  (setq magit-status-buffer-switch-function 'switch-to-buffer)
   (setq magit-completing-read-function 'helm--completing-read-default)
+
+  (defun display-buffer-full-screen (buffer alist)
+    (delete-other-windows)
+    (set-window-dedicated-p nil nil)
+    (set-window-buffer nil buffer)
+    (get-buffer-window buffer))
+
+  (setq magit-display-buffer-function
+	(lambda (buffer)
+	  (if magit-display-buffer-noselect
+	      (magit-display-buffer-traditional buffer)
+	    (display-buffer buffer '(display-buffer-full-screen)))))
 
   (advice-add 'magit-visit-item :after 'reposition-window))
 
@@ -375,6 +388,14 @@ indirectly."
   (setq undo-tree-visualizer-diff t
 	undo-tree-visualizer-timestamps t))
 
+(use-package sql
+  :init
+  (use-package sqlup-mode :commands sqlup-mode)
+  :config
+  (setq sql-indent-maybe-tab t)
+  (add-hook 'sql-mode-hook 'sqlup-mode)
+  (add-hook 'sql-interactive-mode-hook 'sqlup-mode))
+
 (use-package uniquify
   :init (setq uniquify-buffer-name-style 'post-forward-angle-brackets))
 
@@ -385,6 +406,33 @@ indirectly."
 
 (use-package winner
   :init (winner-mode t))
+
+(use-package golden-ratio
+  :diminish golden-ratio-mode
+  :init (golden-ratio-mode t)
+  :config
+  (setq golden-ratio-extra-commands
+	(append golden-ratio-extra-commands
+		'(evil-window-next
+		  evil-window-left
+		  evil-window-right
+		  evil-window-up
+		  evil-window-down)))
+  (setq golden-ratio-exclude-modes
+	'(dired-mode
+	  ediff-mode
+	  helm-mode
+	  help-mode
+	  magit-log-mode
+	  magit-diff-mode
+	  magit-reflog-mode
+	  magit-status-mode
+	  magit-popup-mode)))
+
+(use-package wttrin
+  :commands wttrin
+  :config
+  (setq wttrin-default-cities '("Paris" "Roissy-en-Brie")))
 
 (use-package helm
   :commands helm-mode
@@ -422,7 +470,9 @@ indirectly."
 
   (use-package helm-descbinds
     :bind (("C-h b" . helm-descbinds)
-	   ("C-h w" . helm-descbinds))))
+	   ("C-h w" . helm-descbinds)))
+  (use-package helm-dash
+    :commands helm-dash))
 
 (use-package evil
   :init
