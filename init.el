@@ -12,6 +12,20 @@
 
 (setq-default default-input-method "japanese")
 
+;; fix japanese fonts
+(defun setup-window-system-fonts (&rest frame)
+  (when (window-system)
+    (let* ((jpfont "Osaka-Mono")
+	   (jp-fontspec (font-spec :family jpfont)))
+      (set-fontset-font nil 'japanese-jisx0213.2004-1 jp-fontspec)
+      (set-fontset-font nil 'japanese-jisx0213-2 jp-fontspec)
+      (set-fontset-font nil 'katakana-jisx0201 jp-fontspec)))
+  (advice-remove 'server-create-window-system-frame
+		 #'setup-window-system-fonts))
+
+(advice-add 'server-create-window-system-frame
+	    :after #'setup-window-system-fonts)
+
 (setq echo-keystrokes 0.1
       require-final-newline t
       redisplay-dont-pause t
@@ -70,7 +84,8 @@ indirectly."
 
 (use-package sublime-themes
   :config
-  (load-theme 'granger :no-confirm))
+;;  (load-theme 'granger :no-confirm))
+  (load-theme 'wheatgrass :no-confirm))
 
 (use-package hl-line
   :init (global-hl-line-mode t)
@@ -90,6 +105,7 @@ indirectly."
 (use-package smart-mode-line
   :init
   (setq sml/no-confirm-load-theme t)
+  (setq sml/theme 'automatic)
   (sml/setup)
   :config
   (set-face-attribute 'mode-line nil
@@ -156,6 +172,14 @@ indirectly."
 
 (use-package json-mode
   :mode ("\\.json$" . json-mode))
+
+(use-package javascript-mode
+  :defer t
+  :config
+  (setq js-indent-level 8))
+
+(use-package flycheck
+  :commands flycheck-mode)
 
 (use-package rust-mode)
 
@@ -458,7 +482,7 @@ indirectly."
   (use-package helm-misc)
   (use-package helm-projectile)
   (use-package helm-mode)
-  (use-package helm-match-plugin)
+  (use-package helm-multi-match)
   (use-package helm-buffers)
   (use-package helm-files)
   (use-package helm-locate)
@@ -467,12 +491,25 @@ indirectly."
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
   (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+  (global-set-key (kbd "M-x") 'helm-M-x)
 
   (use-package helm-descbinds
     :bind (("C-h b" . helm-descbinds)
 	   ("C-h w" . helm-descbinds)))
   (use-package helm-dash
-    :commands helm-dash))
+    :commands helm-dash)
+  (use-package helm-dictionary
+    :commands helm-dictionary
+    :init
+    (setq helm-dictionary-online-dicts `(("en.wiktionary.org" . "http://en.wiktionary.org/wiki/%s")))
+    (setq helm-dictionary-browser-function 'eww-browse-url)
+    :config
+    (defun helm-dictionary ()
+      (interactive)
+      (helm :sources '(helm-source-dictionary-online)
+ 	    :full-frame t
+ 	    :candidate-number-limit 500
+ 	    :buffer "*helm dictionary*"))))
 
 (use-package evil
   :init
