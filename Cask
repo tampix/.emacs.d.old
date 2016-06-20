@@ -47,6 +47,7 @@
 (depends-on "rust-mode")
 (depends-on "sauron")
 (depends-on "smart-mode-line")
+(depends-on "spacemacs-theme")
 (depends-on "sql-indent")
 (depends-on "sqlup-mode")
 (depends-on "string-inflection")

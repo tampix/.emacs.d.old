@@ -82,16 +82,40 @@ indirectly."
   (unless (server-running-p)
     (server-start)))
 
-(use-package sublime-themes
-  :config
-;;  (load-theme 'granger :no-confirm))
-  (load-theme 'wheatgrass :no-confirm))
+(use-package spacemacs-theme
+  :init
+  (custom-set-variables
+   '(spacemacs-theme-comment-bg nil)
+   '(spacemacs-theme-custom-colors
+			  '((base . "#c0c0c0")
+			    (bg1 . "#121212")
+			    (bg2 . "#272727")
+			    (bg3 . "#5e5e5e")
+			    (bg4 . "#000000")
+			    (comment . "#899ca1")
+			    (const . "#7f62b3")
+			    (cursor . "#cf4f88")
+			    (err . "#8a2f58")
+			    (func . "#bf85cc")
+			    (head1 . "#4779b3")
+			    (highlight . "#3d3d3d")
+			    (keyword . "#47959e")
+			    (mat . "#899ca1")
+			    (str . "#287373")
+			    (suc . "#5e468c")
+			    (type . "#2b7694")
+			    (var . "#7f62b3")
+			    (war . "#914e89")
+			    )))
+
+  (load-theme 'spacemacs-dark :no-confirm)
+  (set-face-attribute 'font-lock-builtin-face nil :foreground "#395573")
+  (set-face-attribute 'highlight nil :foreground nil :background "#c0c0c0")
+  (set-face-attribute 'region nil :foreground "#121212" :background "#c0c0c0")
+  )
 
 (use-package hl-line
-  :init (global-hl-line-mode t)
-  :config
-  (set-face-background hl-line-face "gray5")
-  (set-face-foreground hl-line-face nil))
+  :init (global-hl-line-mode t))
 
 (use-package command-log-mode
   :commands (global-command-log-mode
@@ -103,6 +127,7 @@ indirectly."
   (exec-path-from-shell-initialize))
 
 (use-package smart-mode-line
+  :defer t
   :init
   (setq sml/no-confirm-load-theme t)
   (setq sml/theme 'automatic)
