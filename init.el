@@ -453,6 +453,10 @@ indirectly."
 	  magit-status-mode
 	  magit-popup-mode)))
 
+(use-package ediff
+  :config
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain))
+
 (use-package wttrin
   :commands wttrin
   :config
