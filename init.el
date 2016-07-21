@@ -111,8 +111,7 @@ indirectly."
   (load-theme 'spacemacs-dark :no-confirm)
   (set-face-attribute 'font-lock-builtin-face nil :foreground "#395573")
   (set-face-attribute 'highlight nil :foreground nil :background "#c0c0c0")
-  (set-face-attribute 'region nil :foreground "#121212" :background "#c0c0c0")
-  )
+  (set-face-attribute 'region nil :foreground "#121212" :background "#c0c0c0"))
 
 (use-package hl-line
   :init (global-hl-line-mode t))
@@ -476,7 +475,14 @@ indirectly."
 	  magit-diff-mode
 	  magit-reflog-mode
 	  magit-status-mode
-	  magit-popup-mode)))
+	  magit-popup-mode))
+  (add-to-list 'golden-ratio-inhibit-functions 'ediff-comparison-buffer-p)
+
+  (defun ediff-comparison-buffer-p ()
+    (and (boundp 'ediff-this-buffer-ediff-sessions)
+	 ediff-this-buffer-ediff-sessions))
+
+  )
 
 (use-package ediff
   :config
