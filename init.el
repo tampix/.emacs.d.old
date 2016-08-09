@@ -87,26 +87,26 @@ indirectly."
   (custom-set-variables
    '(spacemacs-theme-comment-bg nil)
    '(spacemacs-theme-custom-colors
-			  '((base . "#c0c0c0")
-			    (bg1 . "#121212")
-			    (bg2 . "#272727")
-			    (bg3 . "#5e5e5e")
-			    (bg4 . "#000000")
-			    (comment . "#899ca1")
-			    (const . "#7f62b3")
-			    (cursor . "#cf4f88")
-			    (err . "#8a2f58")
-			    (func . "#bf85cc")
-			    (head1 . "#4779b3")
-			    (highlight . "#3d3d3d")
-			    (keyword . "#47959e")
-			    (mat . "#899ca1")
-			    (str . "#287373")
-			    (suc . "#5e468c")
-			    (type . "#2b7694")
-			    (var . "#7f62b3")
-			    (war . "#914e89")
-			    )))
+     '((base . "#c0c0c0")
+       (bg1 . "#121212")
+       (bg2 . "#272727")
+       (bg3 . "#5e5e5e")
+       (bg4 . "#000000")
+       (comment . "#899ca1")
+       (const . "#7f62b3")
+       (cursor . "#cf4f88")
+       (err . "#8a2f58")
+       (func . "#bf85cc")
+       (head1 . "#4779b3")
+       (highlight . "#3d3d3d")
+       (keyword . "#47959e")
+       (mat . "#899ca1")
+       (str . "#287373")
+       (suc . "#5e468c")
+       (type . "#2b7694")
+       (var . "#7f62b3")
+       (war . "#914e89")
+       )))
 
   (load-theme 'spacemacs-dark :no-confirm)
   (set-face-attribute 'font-lock-builtin-face nil :foreground "#395573")
@@ -265,7 +265,14 @@ indirectly."
 	      (magit-display-buffer-traditional buffer)
 	    (display-buffer buffer '(display-buffer-full-screen)))))
 
-  (advice-add 'magit-visit-item :after 'reposition-window))
+  (advice-add 'magit-visit-item :after 'reposition-window)
+
+  ;; Not working for now
+  ;; (use-package magit-gh-pulls
+  ;;   :defer 2
+  ;;   :init
+  ;;   (add-hook 'magit-mode-hook #'turn-on-magit-gh-pulls))
+  )
 
 (use-package git-timemachine
   :commands git-timemachine
@@ -542,9 +549,9 @@ indirectly."
     (defun helm-dictionary ()
       (interactive)
       (helm :sources '(helm-source-dictionary-online)
- 	    :full-frame t
- 	    :candidate-number-limit 500
- 	    :buffer "*helm dictionary*"))))
+	    :full-frame t
+	    :candidate-number-limit 500
+	    :buffer "*helm dictionary*"))))
 
 (use-package evil
   :init
