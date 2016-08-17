@@ -629,6 +629,7 @@ indirectly."
   ;; ex-mode shortcuts
   (evil-cmap "e " 'helm-find-files)
   (evil-cmap "b " 'helm-buffers-list)
+  (evil-cmap "p " 'helm-projectile)
   (evil-cmap "pf " 'helm-projectile-find-file)
   (evil-cmap "ps " 'helm-projectile-switch-project)
   (evil-cmap "pa " 'helm-projectile-ag)
