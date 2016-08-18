@@ -1,5 +1,6 @@
 (source gnu)
 (source melpa)
+(source melpa-stable)
 
 (depends-on "ace-jump-mode")
 (depends-on "command-log-mode")
@@ -7,6 +8,7 @@
 (depends-on "company-restclient")
 (depends-on "csv-mode")
 (depends-on "eldoc")
+(depends-on "ensime")
 (depends-on "erc-hl-nicks")
 (depends-on "esup")
 (depends-on "evil")
@@ -33,6 +35,7 @@
 (depends-on "highlight-numbers")
 (depends-on "highlight-parentheses")
 (depends-on "highlight-quoted")
+(depends-on "hl-todo")
 (depends-on "js2-mode")
 (depends-on "json-mode")
 (depends-on "magit")

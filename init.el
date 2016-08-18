@@ -1,8 +1,6 @@
-(mapc
- (lambda (mode)
-   (when (fboundp mode)
-     (funcall mode -1)))
- '(menu-bar-mode tool-bar-mode scroll-bar-mode))
+(if (featurep 'menu-bar) (menu-bar-mode -1))
+(if (featurep 'tool-bar) (tool-bar-mode -1))
+(if (featurep 'scroll-bar) (scroll-bar-mode -1))
 
 (line-number-mode t)
 (column-number-mode t)
@@ -129,7 +127,7 @@ indirectly."
   :defer t
   :init
   (setq sml/no-confirm-load-theme t)
-  (setq sml/theme 'automatic)
+  (setq sml/theme 'respectful)
   (sml/setup)
   :config
   (set-face-attribute 'mode-line nil
@@ -161,9 +159,10 @@ indirectly."
   :commands hes-mode
   :init (add-hook 'prog-mode-hook 'hes-mode t))
 
-(use-package yascroll
-  :commands global-yascroll-bar-mode
-  :init (add-hook 'after-init-hook 'global-yascroll-bar-mode t))
+(use-package hl-todo
+  :diminish hl-todo-mode
+  :commands hl-todo-mode
+  :init (add-hook 'prog-mode-hook 'hl-todo-mode t))
 
 (use-package org
   :commands (org-mode)
@@ -187,6 +186,11 @@ indirectly."
 	      (setq c-basic-offset 4
 		    tab-width 4
 		    indent-tabs-mode t))))
+
+(use-package ensime
+  :pin melpa-stable
+  :config
+  (setq ensime-startup-snapshot-notification))
 
 (use-package nxml-mode
   :config
