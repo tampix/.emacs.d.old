@@ -52,25 +52,15 @@
 
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
-(require 'pallet)
-(pallet-mode t)
-
-(put 'narrow-to-region 'disabled nil)
-
-(defun narrow-to-region-indirect (start end)
-  "Restrict editing in this buffer to the current region,
-indirectly."
-  (interactive "r")
-  (deactivate-mark)
-  (let ((buf (clone-indirect-buffer nil nil)))
-    (with-current-buffer buf
-      (narrow-to-region start end))
-    (switch-to-buffer buf)))
-
 (require 'use-package)
 
 (use-package esup
   :commands esup)
+
+(use-package pallet
+  :defer 2
+  :config
+  (pallet-mode t))
 
 (use-package cl)
 
@@ -189,10 +179,12 @@ indirectly."
 
 (use-package ensime
   :pin melpa-stable
+  :commands (ensime ensime-mode)
   :config
   (setq ensime-startup-snapshot-notification))
 
 (use-package nxml-mode
+  :commands nxml-mode
   :config
   (add-hook 'nxml-mode-hook
 	    (lambda () (setq nxml-child-indent 8
@@ -448,8 +440,10 @@ indirectly."
 	undo-tree-visualizer-timestamps t))
 
 (use-package sql
+  :commands sql-mode
   :init
-  (use-package sqlup-mode :commands sqlup-mode)
+  (use-package sqlup-mode
+    :commands sqlup-mode)
   :config
   (setq sql-indent-maybe-tab t)
   (add-hook 'sql-mode-hook 'sqlup-mode)
@@ -496,6 +490,7 @@ indirectly."
   )
 
 (use-package ediff
+  :commands ediff-mode
   :config
   (setq ediff-window-setup-function 'ediff-setup-windows-plain))
 
@@ -564,39 +559,18 @@ indirectly."
 	evil-want-C-w-in-emacs-state t
 	evil-search-module 'evil-search
 	evil-default-cursor t)
-
   (add-hook 'after-init-hook 'evil-mode t)
-
-  (defsubst add-evil-mode-hook (function)
-    "Add FUNCTION to `evil-mode-hook'"
-    (add-hook 'evil-mode-hook function))
-
+  :config
   (use-package evil-visualstar
     :commands global-evil-visualstar-mode
-    :init (add-evil-mode-hook 'global-evil-visualstar-mode))
+    :init (add-hook 'evil-mode-hook 'global-evil-visualstar-mode))
   (use-package evil-jumper
     :commands evil-jumper-mode
-    :init (add-evil-mode-hook 'evil-jumper-mode))
-  (use-package evil-surround
-    :commands global-evil-surround-mode
-    :init
-    (add-evil-mode-hook 'global-evil-surround-mode)
-    :config
-    (setq-default surround-pairs-alist
-		  '((?\( . ("(" . ")"))
-		    (?\[ . ("[" . "]"))
-		    (?\{ . ("{" . "}"))
-		    (?\) . ("( " . " )"))
-		    (?\] . ("[ " . " ]"))
-		    (?\} . ("{ " . " }"))
-		    (?# . ("#{" . "}"))
-		    (?b . ("(" . ")"))
-		    (?B . ("{" . "}"))
-		    (?> . ("<" . ">"))
-		    (?t . evil-surround-read-tag)
-		    (?< . evil-surround-read-tag)
-		    (?f . evil-surround-function))))
-  :config
+    :init (add-hook 'evil-mode-hook 'evil-jumper-mode))
+  (use-package evil-numbers
+    :commands (evil-numbers/inc-at-pt
+	       evil-numbers/dec-at-pt))
+
   (add-hook 'magit-status-mode-hook
 	    (lambda () (define-key magit-status-mode-map (kbd ":") 'evil-ex)))
 
@@ -662,6 +636,17 @@ indirectly."
   (evil-nmap (kbd "SPC") 'evil-ace-jump-char-mode)
   (evil-nmap (kbd "S-SPC") 'evil-ace-jump-word-mode)
   (evil-nmap (kbd "C-SPC") 'evil-ace-jump-word-no-prefix-mode)
+
+  (put 'narrow-to-region 'disabled nil)
+  (defun narrow-to-region-indirect (start end)
+    "Restrict editing in this buffer to the current region,
+indirectly."
+    (interactive "r")
+    (deactivate-mark)
+    (let ((buf (clone-indirect-buffer nil nil)))
+      (with-current-buffer buf
+	(narrow-to-region start end))
+      (switch-to-buffer buf)))
 
   ;; Evil narrow-indirect motions
   (evil-define-operator evil-narrow-indirect (beg end type)

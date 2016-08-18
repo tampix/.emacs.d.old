@@ -13,7 +13,7 @@
 (depends-on "esup")
 (depends-on "evil")
 (depends-on "evil-jumper")
-(depends-on "evil-surround")
+(depends-on "evil-numbers")
 (depends-on "evil-visualstar")
 (depends-on "exec-path-from-shell")
 (depends-on "flycheck")
