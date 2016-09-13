@@ -123,11 +123,11 @@
   (set-face-attribute 'mode-line nil
 		      :foreground "gray40"
 		      :background "black"
-		      :box '(:color "black" :line-width 6))
+		      :box '(:color "black" :line-width 16))
   (set-face-attribute 'mode-line-inactive nil
 		      :foreground "gray15"
 		      :background "black"
-		      :box '(:color "black" :line-width 6)))
+		      :box '(:color "black" :line-width 16)))
 
 (use-package volatile-highlights
   :diminish volatile-highlights-mode
