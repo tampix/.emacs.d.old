@@ -209,12 +209,31 @@
 (use-package abbrev
   :diminish abbrev-mode)
 
-(use-package git-gutter-fringe+
-  :diminish git-gutter+-mode
-  :commands global-git-gutter+-mode
-  :defer t
+(use-package git-gutter
+  :diminish git-gutter-mode
+  :commands git-gutter-mode
+  :init
+  (add-hook 'text-mode-hook 'git-gutter-mode)
+  (add-hook 'prog-mode-hook 'git-gutter-mode)
+  (add-hook 'conf-mode-hook 'git-gutter-mode)
   :config
-  (git-gutter-fr+-minimal))
+  (require 'git-gutter-fringe)
+  (fringe-helper-define 'git-gutter-fr:added '(top repeat)
+    "XXXX....")
+  (fringe-helper-define 'git-gutter-fr:deleted '(bottom)
+    "X......."
+    "XX......"
+    "XXX....."
+    "XXXX...."
+    "XXXXX..."
+    "XXXXXX.."
+    "XXXXXXX."
+    "XXXXXXXX")
+  (fringe-helper-define 'git-gutter-fr:modified '(top repeat)
+    "XXXX....")
+  (set-face-foreground 'git-gutter-fr:added "#2b7694")
+  (set-face-foreground 'git-gutter-fr:deleted  "#8a2f58")
+  (set-face-foreground 'git-gutter-fr:modified "#5e468c"))
 
 (use-package recentf
   :commands (recentf-mode)
@@ -230,7 +249,6 @@
   :config
   (projectile-global-mode t)
 
-  (global-git-gutter+-mode t)
   (recentf-mode t)
   (helm-projectile-on)
   (setq projectile-enable-caching t
