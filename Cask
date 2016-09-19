@@ -40,6 +40,7 @@
 (depends-on "json-mode")
 (depends-on "magit")
 (depends-on "magit-gh-pulls")
+(depends-on "magithub")
 (depends-on "markdown-mode")
 (depends-on "pallet")
 (depends-on "paredit")
